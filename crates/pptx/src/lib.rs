@@ -14,6 +14,7 @@ mod maps;
 mod opc;
 mod png;
 pub(crate) mod read;
+pub use read::MAX_TAG_BYTES;
 mod tables;
 mod write;
 mod xml;
@@ -61,6 +62,12 @@ pub fn is_encrypted(bytes: &[u8]) -> bool {
 /// Read a `.pptx` / `.potx` / `.ppsx` package.
 pub fn import(bytes: &[u8]) -> Result<Presentation, PptxError> {
     read::import(bytes)
+}
+
+/// [`import`], plus the part names of slides the file lists but that couldn't be read and were
+/// left out.
+pub fn import_checked(bytes: &[u8]) -> Result<(Presentation, Vec<String>), PptxError> {
+    read::import_checked(bytes)
 }
 
 /// Read the theme of a `.thmx` file, or of a `.pptx` / `.potx`'s first master, with its media.
