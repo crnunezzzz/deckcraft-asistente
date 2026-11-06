@@ -57,6 +57,7 @@ fn with(f: impl FnOnce(&mut AssistantHost)) {
 /// On a Wayland session the window opens natively, like the official app's (its Flatpak offers
 /// X11 only as a fallback), not through XWayland: there the desktop draws its own taller title
 /// bar, with the document name, above the editor's title row. `DECKCRAFT_X11=1` keeps XWayland.
+#[cfg(all(unix, not(target_os = "macos")))]
 pub fn native_wayland() -> bool {
     deckcraft_assistant::desktop::native_wayland("DECKCRAFT_X11")
 }
