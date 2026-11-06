@@ -16,7 +16,7 @@ deckcraft-ui-egui = { workspace = true }
 deckcraft-media = { workspace = true }
 # The AI assistant panel (API keys or the user's ChatGPT / Claude plan).
 deckcraft-assistant = { workspace = true }
-eframe = { workspace = true, features = ["default_fonts", "wgpu", "accesskit", "links", "wayland", "x11"] }
+eframe = { workspace = true, features = ["default_fonts", "wgpu", "accesskit", "clipboard", "links", "wayland", "x11"] }
 egui = { workspace = true }
 serde_json = { workspace = true }
 log = { workspace = true }

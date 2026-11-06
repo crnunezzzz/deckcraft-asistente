@@ -170,6 +170,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
                 ui.painter().rect_filled(Rect::from_center_size(pos2(r.center().x, r.max.y - 1.0), vec2(uw, 3.0)), CornerRadius::same(1), t.accent);
             }
             if resp.clicked() {
+                crate::host_toolbar::tab_clicked(app, name);
                 if name == "Asistente" {
                     if let Some(host) = &mut app.services.host_toolbar {
                         host.action = Some("assistant");
@@ -281,6 +282,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
             ui.ctx().data_mut(|d| d.insert_temp(request_id, x.clamp(0.0, overflow)));
             ui.ctx().request_repaint();
         }
+        crate::host_toolbar::ribbon_pin(ui, app, card);
     });
 }
 
