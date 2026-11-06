@@ -11,8 +11,12 @@ pub mod desktop;
 pub mod protocol;
 pub mod update;
 
-/// Where this fork publishes its builds (the workflow's own repository takes precedence).
-pub const RELEASES: &str = "crnunezzzz/deckcraftandroid";
+/// Where this fork publishes its builds (the workflow's own repository takes precedence). Its
+/// former name, `crnunezzzz/deckcraftandroid`, is accepted too (`update::RENAMES`).
+pub const RELEASES: &str = "crnunezzzz/deckcraft-asistente";
+
+/// The original project: its newest release tells whether this build is behind (`update::behind`).
+pub const UPSTREAM: &str = "storytold/deckcraft";
 
 /// The assistant's texts for this app.
 pub const BRANDING: assistant::Branding = assistant::Branding {

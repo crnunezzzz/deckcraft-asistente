@@ -1,4 +1,4 @@
-> **Android para tablets:** [Descargar DeckCraft APK](https://github.com/crnunezzzz/deckcraftandroid/releases/latest/download/DeckCraft-Android-arm64.apk) · [Instalación y uso](docs/android.md). Para pasar de android.3 a android.4, exporta tus documentos antes de desinstalar la versión anterior.
+> **Android para tablets:** [Descargar DeckCraft APK](https://github.com/crnunezzzz/deckcraft-asistente/releases/latest/download/DeckCraft-Android-arm64.apk) · [Instalación y uso](docs/android.md). Para pasar de android.3 a android.4, exporta tus documentos antes de desinstalar la versión anterior.
 
 <p align="center">
   <a href="https://getartcraft.com/">
