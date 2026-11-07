@@ -205,6 +205,9 @@ pub(super) fn about(app: &mut SlideApp, ui: &mut Ui) {
             });
             dim(ui, &crate::dialogs::version_line());
             dim(ui, "Open source under MIT OR Apache-2.0. Not affiliated with Microsoft.");
+            // IA fork: a modified version says it is based on the original, never that it is one.
+            dim(ui, "Versión modificada con asistente de IA, basada en DeckCraft del equipo de ArtCraft. No es un producto oficial de ArtCraft.");
+            ui.hyperlink_to("Esta versión: github.com/crnunezzzz/deckcraft-asistente", "https://github.com/crnunezzzz/deckcraft-asistente");
             ui.add_space(14.0);
             if task(ui, Icon::Help, "Credits", "Credits", "The people and models who built DeckCraft.", true) {
                 let _ = app.run("app.about", json!({}));

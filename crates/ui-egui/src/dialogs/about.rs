@@ -25,10 +25,12 @@ pub fn about(_app: &mut SlideApp, ui: &mut Ui) {
         ui.add_space(6.0);
         ui.label("Presentations and slide shows, rebuilt from scratch in pure Rust.");
         ui.label("An open-source, clean-room project. Not affiliated with Microsoft.");
+        // IA fork: a modified version says it is based on the original, never that it is one.
+        ui.label("Versión modificada con asistente de IA, basada en DeckCraft del equipo de ArtCraft.");
+        ui.label("No es un producto oficial de ArtCraft.");
         ui.add_space(6.0);
-        ui.hyperlink_to("Join our community on Discord", deckcraft_engine::links::DISCORD);
-        ui.hyperlink_to("getartcraft.com/apps/deckcraft", deckcraft_engine::links::APP_PAGE);
-        ui.hyperlink_to("Source on GitHub", deckcraft_engine::links::GITHUB);
+        ui.hyperlink_to("Esta versión: github.com/crnunezzzz/deckcraft-asistente", "https://github.com/crnunezzzz/deckcraft-asistente");
+        ui.hyperlink_to("Original: github.com/storytold/deckcraft", deckcraft_engine::links::GITHUB);
         ui.add_space(6.0);
         ui.label(egui::RichText::new("MIT OR Apache-2.0 · © 2026 ArtCraft Team and the DeckCraft contributors").size(11.0).color(t.text_faint));
     });
