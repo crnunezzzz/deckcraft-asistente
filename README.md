@@ -1,13 +1,46 @@
-> **Android para tablets:** [Descargar DeckCraft APK](https://github.com/crnunezzzz/deckcraft-asistente/releases/latest/download/DeckCraft-Android-arm64.apk) · [Instalación y uso](docs/android.md). Para pasar de android.3 a android.4, exporta tus documentos antes de desinstalar la versión anterior.
+> [!IMPORTANT]
+> **Versión modificada, no oficial.** Este repositorio es un fork de [storytold/deckcraft](https://github.com/storytold/deckcraft) mantenido por [@crnunezzzz](https://github.com/crnunezzzz). No es un producto de ArtCraft ni está respaldado por su equipo. Está basado en DeckCraft del equipo de ArtCraft. Para la versión oficial, ve al [repositorio original](https://github.com/storytold/deckcraft).
 
-<p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
-</p>
+## DeckCraft con asistente de IA
+
+DeckCraft, el programa de presentaciones de código abierto al estilo de PowerPoint, con un **asistente de IA** integrado y algunos ajustes propios. Se compila para **Linux x64 (Ubuntu), Windows x64 y Android (tablets ARM64)** y se mantiene al día con el original de forma automática.
+
+**Descargas** (última versión, en [Releases](https://github.com/crnunezzzz/deckcraft-asistente/releases/latest)):
+
+- **Linux:** `DeckCraft-IA-<versión>-linux-x64.zip`. Descomprímelo y ejecuta `sh install-ia.sh`.
+- **Windows:** `DeckCraft-IA-<versión>-windows-x64.zip`. Descomprímelo y ejecuta `install-ia.ps1` (clic derecho › Ejecutar con PowerShell). Se instala aparte del DeckCraft oficial.
+- **Android:** `DeckCraft-IA-<versión>-Android-arm64.apk` · [instalación y uso](docs/android.md). Para pasar de android.3 a android.4, exporta tus documentos antes de desinstalar la versión anterior.
+
+### Qué cambia frente al original
+
+**Añadido por este fork**
+
+- **Asistente de IA** (pestaña **Asistente**). Lee la presentación abierto y lo edita con las mismas órdenes que la línea de comandos. Funciona con una clave de API de OpenAI o Anthropic, o con tu plan de ChatGPT (vía Codex) o de Claude (vía Claude Code). La IA solo puede usar las órdenes del editor: no tiene terminal, ni archivos, ni acceso a la red. Detalles: [docs/asistente-ia-windows.md](docs/asistente-ia-windows.md). Código: `apps/deckcraft-assistant`.
+- **App para Android** (`apps/deckcraft-android`). Es el mismo motor e interfaz, adaptados al tacto, con el asistente y claves cifradas en el Android Keystore. Ver [docs/android.md](docs/android.md).
+- **Actualizaciones del fork.** Al abrir, la app avisa «Hay una versión nueva» y la instala con **Actualizar**. También avisa cuando la versión oficial va por delante. Usa las versiones de este repositorio, no las oficiales, que no traen el asistente.
+- **Pin de la cinta**, como en PowerPoint: fija o desfija la cinta; desfijada, se abre al pulsar una pestaña y se oculta al volver a la diapositiva.
+- **Barra de título en Ubuntu.** En sesiones Wayland (GNOME), la app usa Wayland nativo en vez de XWayland, así que no aparece una segunda barra con el nombre del archivo. Con la variable `DECKCRAFT_X11=1` vuelves a la ventana X11.
+- **Interfaz en español.** El DeckCraft original solo está en inglés. Este fork añade `crates/ui-egui/src/lang.rs`, un catálogo español con la terminología de PowerPoint, y un selector en **Archivo › Opciones › Idioma de la interfaz**. Traduce las pestañas, la cinta, el menú Archivo, la barra de estado y los títulos de los diálogos. Algunos textos de paneles y ayudas emergentes siguen en inglés. Sin elección guardada, arranca en el idioma del sistema.
+- **Pegar imágenes desde el portapapeles.** El original compilaba `eframe` sin la función `clipboard`, así que Ctrl+V no pegaba imágenes copiadas de otras apps. El fork la activa en `apps/deckcraft/Cargo.toml`.
+
+**Cómo se mantiene al día** ([`.github/workflows/ia-windows.yml`](.github/workflows/ia-windows.yml))
+
+- Cada día fusiona la rama `release` del original. Los choques que se repiten los resuelve [`.github/ia/sync-upstream.sh`](.github/ia/sync-upstream.sh); los de código, Claude. Luego compila y prueba para Windows, Linux y Android, y publica una versión `ia-v<versión>-<n>`.
+- Si algo falla, no se publica nada y se avisa: la ejecución queda en rojo y llega un correo de GitHub.
+- Los cambios al código original son pequeños puntos de enganche (`host_toolbar`, `assistant_host`, `lang::tr`, …), para que las fusiones casi nunca choquen.
+
+**Quitado respecto al original**
+
+- Los logotipos de ArtCraft (`docs/brand/`). Su [licencia de marca](docs/brand/LICENSE-brand.txt) exige retirarlos de las versiones modificadas que se publican.
+- El actualizador oficial dentro de la app: instalaría encima el DeckCraft oficial, sin asistente.
+
+**Licencia:** la misma del original, MIT OR Apache-2.0 (ver [NOTICE](NOTICE)). Los cambios de este fork se publican con esa misma licencia.
+
+---
+
+*Lo que sigue es el README del proyecto original, sin sus logotipos.*
+
+<!-- fin de la sección del fork -->
 
 <p align="center">
   <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.deckcraft.png" width="128" height="128" alt="DeckCraft icon: a presentation screen with a bar chart on an orange tile">
@@ -337,11 +370,6 @@ The ArtCraft name, wordmark and logos in [`docs/brand/`](docs/brand/) are tradem
 ArtCraft Team and are not covered by this license. They may be used only unmodified, and only as
 part of this repository and DeckCraft, under [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt).
 Forks and modified versions must remove them.
-
-<p align="center">
-  <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
-  <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
-</p>
 
 ## Android tablet port
 
