@@ -249,7 +249,7 @@ fn main() -> eframe::Result {
     }
     #[cfg(all(unix, not(target_os = "macos")))]
     let x11 = match display::choose_from_env() {
-        display::Choice::X11 => true,
+        display::Choice::X11 => !assistant_host::native_wayland(),
         display::Choice::Default => false,
         display::Choice::None => {
             // winit's own error says little to someone who started DeckCraft from a console.
