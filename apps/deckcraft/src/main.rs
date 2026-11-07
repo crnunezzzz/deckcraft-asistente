@@ -90,6 +90,7 @@ fn load_prefs(app: &mut SlideApp) {
         return;
     }
     let Some(dir) = config_dir() else { return };
+    deckcraft_ui_egui::lang::load(&dir);
     let (ui, prefs) = deckcraft_ui_egui::settings::load(&dir);
     if let Some(ui) = ui {
         app.ui = ui;
@@ -105,6 +106,7 @@ fn save_prefs(app: &SlideApp) {
     }
     if let Some(dir) = config_dir() {
         deckcraft_ui_egui::settings::save(&dir, &app.ui, &app.session.prefs);
+        deckcraft_ui_egui::lang::save(&dir);
     }
 }
 
