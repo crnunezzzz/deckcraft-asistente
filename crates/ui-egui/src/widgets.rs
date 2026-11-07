@@ -51,7 +51,7 @@ fn big_button_width(text_w: f32, split: bool) -> f32 {
 pub fn big_button_ex(ui: &mut Ui, icon: Icon, label: &str, enabled: bool, split: bool, selected: bool) -> (Response, Option<Response>) {
     let t = Tokens::get(ui.ctx());
     let font = theme::font(11.0);
-    let lines: Vec<&str> = wrap_label(label);
+    let lines: Vec<&str> = wrap_label(crate::lang::tr(label));
     let text_w = lines.iter().map(|l| ui.fonts_mut(|f| f.layout_no_wrap(l.to_string(), font.clone(), t.text).size().x)).fold(0.0f32, f32::max);
     let w = big_button_width(text_w, split);
     // The whole button runs the main command; the narrow strip at the end of the label row is the
@@ -150,6 +150,7 @@ pub fn small_button_named(
 ) -> (Response, Option<Response>) {
     let t = Tokens::get(ui.ctx());
     let font = theme::font(12.0);
+    let label = crate::lang::tr(label);
     let tw = if label.is_empty() { 0.0 } else { ui.fonts_mut(|f| f.layout_no_wrap(label.to_string(), font.clone(), t.text).size().x) + 5.0 };
     let arrow_w = if split { 12.0 } else { 0.0 };
     let w = 24.0 + tw + arrow_w;
@@ -246,7 +247,7 @@ fn split_popup_id(main: &Response) -> egui::Id {
 pub fn check_item(ui: &mut Ui, label: &str, enabled: bool, on: bool) -> Response {
     let t = Tokens::get(ui.ctx());
     let font = theme::font(12.0);
-    let tw = ui.fonts_mut(|f| f.layout_no_wrap(label.to_string(), font.clone(), t.text).size().x) + 5.0;
+    let tw = ui.fonts_mut(|f| f.layout_no_wrap(crate::lang::tr(label).to_string(), font.clone(), t.text).size().x) + 5.0;
     let (rect, resp) = ui.allocate_exact_size(vec2(24.0 + tw, 22.0), if enabled { Sense::click() } else { Sense::hover() });
     resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::CheckBox, enabled, on, label));
     let painter = ui.painter_at(rect);
@@ -256,7 +257,13 @@ pub fn check_item(ui: &mut Ui, label: &str, enabled: bool, on: bool) -> Response
     if on {
         icons::paint(&painter, Rect::from_center_size(pos2(rect.min.x + 12.0, rect.center().y), vec2(17.0, 17.0)), Icon::Check, t.text, !enabled);
     }
-    painter.text(pos2(rect.min.x + 24.0, rect.center().y), Align2::LEFT_CENTER, label, font, if enabled { t.text } else { t.text_faint });
+    painter.text(
+        pos2(rect.min.x + 24.0, rect.center().y),
+        Align2::LEFT_CENTER,
+        crate::lang::tr(label),
+        font,
+        if enabled { t.text } else { t.text_faint },
+    );
     resp
 }
 
@@ -271,7 +278,7 @@ pub fn icon_toggle(ui: &mut Ui, icon: Icon, tip: &str, enabled: bool, on: bool) 
     icons::paint(&painter, rect.shrink(3.0), icon, t.text, !enabled);
     // Named for screen readers (and tests) by its tooltip.
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, enabled, tip));
-    resp.on_hover_text(tip)
+    resp.on_hover_text(crate::lang::tr(tip))
 }
 
 /// Icon with a colour bar under it and a dropdown arrow (Font Color, Highlight, Shape Fill…).
@@ -300,7 +307,7 @@ pub fn color_split(ui: &mut Ui, icon: Icon, tip: &str, color: Color32, enabled: 
         if enabled { color } else { t.text_faint },
     );
     chevron(&painter, pos2(rect.max.x - 5.5, rect.center().y), 2.6, t.text_dim);
-    (main.on_hover_text(tip), arrow)
+    (main.on_hover_text(crate::lang::tr(tip)), arrow)
 }
 
 /// A ribbon group: contents, then a thin vertical separator.
@@ -583,13 +590,14 @@ pub fn section(ui: &mut Ui, title: &str, open: bool) -> bool {
         p.line_segment([pos2(c.x - 2.0, c.y - 4.0), pos2(c.x + 2.0, c.y)], Stroke::new(1.2, t.text));
         p.line_segment([pos2(c.x + 2.0, c.y), pos2(c.x - 2.0, c.y + 4.0)], Stroke::new(1.2, t.text));
     }
-    p.text(pos2(rect.min.x + 18.0, rect.center().y), Align2::LEFT_CENTER, title, theme::bold(13.0), t.text);
+    p.text(pos2(rect.min.x + 18.0, rect.center().y), Align2::LEFT_CENTER, crate::lang::tr(title), theme::bold(13.0), t.text);
     if resp.clicked() { !open } else { open }
 }
 
 /// A button with an optional label and a painted dropdown chevron (the UI font has no ▾).
 pub fn drop_button(ui: &mut Ui, label: &str, size: egui::Vec2, enabled: bool) -> egui::Response {
     let t = Tokens::get(ui.ctx());
+    let label = crate::lang::tr(label);
     let r = ui
         .add_enabled(enabled, egui::Button::new(if label.is_empty() { String::new() } else { format!("{label}   ") }).min_size(size))
         .on_hover_text(if label.is_empty() { "Options" } else { label });

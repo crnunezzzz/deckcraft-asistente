@@ -397,7 +397,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
                 // page past the right margin and clip the tiles (#1421).
                 ui.set_max_width(ui.available_width().min(CONTENT_W));
                 if bs.page != Page::Home {
-                    ui.label(RichText::new(bs.page.label()).font(theme::bold(22.0)).color(t.text));
+                    ui.label(RichText::new(crate::lang::tr(bs.page.label())).font(theme::bold(22.0)).color(t.text));
                     ui.add_space(16.0);
                 }
                 // Errors raised on a backstage page (a missing recent file, a failed open) would
@@ -452,7 +452,7 @@ fn nav_item(ui: &mut Ui, nav: Nav, bs: &Backstage, index: usize, t: &Tokens) -> 
     }
     let ink = if selected { t.accent } else { t.text };
     icons::paint(p, Rect::from_center_size(pos2(rect.left() + 26.0, rect.center().y), vec2(16.0, 16.0)), nav.icon(), ink, false);
-    p.text(pos2(rect.left() + 44.0, rect.center().y), Align2::LEFT_CENTER, label, theme::font(13.0), ink);
+    p.text(pos2(rect.left() + 44.0, rect.center().y), Align2::LEFT_CENTER, crate::lang::tr(label), theme::font(13.0), ink);
     resp
 }
 
@@ -466,7 +466,7 @@ fn separator(ui: &mut Ui, t: &Tokens) {
 
 fn heading(ui: &mut Ui, text: &str) {
     let t = Tokens::get(ui.ctx());
-    ui.label(RichText::new(text).font(theme::bold(16.0)).color(t.text));
+    ui.label(RichText::new(crate::lang::tr(text)).font(theme::bold(16.0)).color(t.text));
     ui.add_space(8.0);
 }
 

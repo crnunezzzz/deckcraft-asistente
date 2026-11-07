@@ -24,6 +24,7 @@ pub mod doc_window;
 pub mod eyedropper;
 pub mod host_toolbar;
 pub mod icons;
+pub mod lang;
 pub mod media;
 pub mod menus;
 pub mod opening;
