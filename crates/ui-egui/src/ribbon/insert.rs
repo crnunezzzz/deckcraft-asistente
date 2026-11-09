@@ -80,7 +80,7 @@ pub(super) fn insert(app: &mut SlideApp, ui: &mut Ui) {
                     ui.separator();
                 }
                 if let Some(k) = k
-                    && ui.button(crate::lang::tr(&k.label())).clicked()
+                    && ui.button(crate::lang::tr(k.label())).clicked()
                 {
                     run(app, "insert.chart", json!({"type": format!("{k:?}")}));
                 }
@@ -171,7 +171,7 @@ fn render_icon_categories(app: &mut SlideApp, ui: &mut Ui, icons: &[deckcraft_en
         }
     }
     for cat in cats {
-        ui.label(egui::RichText::new(crate::lang::tr(&cat)).small().strong());
+        ui.label(egui::RichText::new(crate::lang::tr(cat)).small().strong());
         ui.horizontal_wrapped(|ui| {
             for icon in icons.iter().filter(|i| i.category == cat) {
                 icon_cell(app, ui, icon, color, hover);
@@ -220,7 +220,7 @@ fn icon_cell(app: &mut SlideApp, ui: &mut Ui, icon: &deckcraft_engine::icons::Ic
         ui.painter().rect_filled(r, CornerRadius::same(4), hover);
     }
     paint_icon(ui.painter(), r.shrink(6.0), icon, color);
-    if resp.on_hover_text(crate::lang::tr(&icon.label)).clicked() {
+    if resp.on_hover_text(crate::lang::tr(icon.label)).clicked() {
         let _ = app.run("insert.icon", json!({"name": icon.name}));
         ui.close();
     }

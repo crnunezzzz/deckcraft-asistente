@@ -119,14 +119,14 @@ pub fn status_bar(app: &mut SlideApp, ui: &mut Ui) {
 fn small_icon(ui: &mut Ui, icon: Icon, tip: &str, on: bool) -> egui::Response {
     let resp = icon_button(ui, icon, on);
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, tip));
-    resp.on_hover_text(crate::lang::tr(&tip))
+    resp.on_hover_text(crate::lang::tr(tip))
 }
 
 /// A view button: screen readers hear its name and whether its view is the one shown.
 fn view_icon(ui: &mut Ui, icon: Icon, tip: &str, on: bool) -> egui::Response {
     let resp = icon_button(ui, icon, on);
     resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, on, tip));
-    resp.on_hover_text(crate::lang::tr(&tip))
+    resp.on_hover_text(crate::lang::tr(tip))
 }
 
 fn icon_button(ui: &mut Ui, icon: Icon, on: bool) -> egui::Response {
@@ -279,7 +279,7 @@ pub fn notes_pane(app: &mut SlideApp, ui: &mut Ui) {
                         ui.label(egui::RichText::new(crate::lang::tr("(no spelling suggestions)")).weak());
                     }
                     for to in &w.suggestions {
-                        if ui.button(egui::RichText::new(crate::lang::tr(&to)).strong()).clicked() {
+                        if ui.button(egui::RichText::new(crate::lang::tr(to)).strong()).clicked() {
                             changed = Some(splice(ls + w.start, to));
                             ui.close();
                         }

@@ -145,7 +145,7 @@ pub(super) fn presenter_window(ctx: &egui::Context, show: &mut Show, doc: &std::
     // The presenter window is dark; default buttons draw dark text on it (#221).
     let button = |ui: &mut Ui, s: &str| {
         ui.add(
-            egui::Button::new(egui::RichText::new(crate::lang::tr(&s)).size(15.0).color(Color32::WHITE))
+            egui::Button::new(egui::RichText::new(crate::lang::tr(s)).size(15.0).color(Color32::WHITE))
                 .fill(Color32::from_gray(60))
                 .min_size(vec2(0.0, 30.0)),
         )

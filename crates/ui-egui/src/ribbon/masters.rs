@@ -42,7 +42,7 @@ pub(super) fn slide_master(app: &mut SlideApp, ui: &mut Ui) {
             for (l, k) in
                 [("Content", "content"), ("Text", "text"), ("Picture", "picture"), ("Chart", "chart"), ("Table", "table"), ("Media", "media")]
             {
-                if ui.button(crate::lang::tr(&l)).clicked() {
+                if ui.button(crate::lang::tr(l)).clicked() {
                     run(app, "master.insertPlaceholder", json!({"kind": k}));
                 }
             }
@@ -83,7 +83,7 @@ pub(super) fn notes_master(app: &mut SlideApp, ui: &mut Ui) {
             rows(ui, |ui| {
                 for (label, key, k) in col {
                     let mut on = shown(app, k);
-                    if ui.checkbox(&mut on, crate::lang::tr(&label)).changed() {
+                    if ui.checkbox(&mut on, crate::lang::tr(label)).changed() {
                         run(app, "notes.placeholders", json!({ key: on }));
                     }
                 }
@@ -124,7 +124,7 @@ pub(super) fn handout_master(app: &mut SlideApp, ui: &mut Ui) {
                 ("Page Number", "pageNumber", PhType::SlideNum),
             ] {
                 let mut on = shown(app, k);
-                if ui.checkbox(&mut on, crate::lang::tr(&label)).changed() {
+                if ui.checkbox(&mut on, crate::lang::tr(label)).changed() {
                     run(app, "handout.placeholders", json!({ key: on }));
                 }
             }

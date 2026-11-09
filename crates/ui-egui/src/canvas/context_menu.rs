@@ -19,7 +19,7 @@ pub(super) fn context_menu(app: &mut SlideApp, resp: &egui::Response) {
         }
         let has_sel = app.session.active().is_some_and(|d| !d.selection.shapes.is_empty());
         for (l, id) in [("Cut", "edit.cut"), ("Copy", "edit.copy"), ("Paste", "edit.paste")] {
-            if ui.add_enabled(crate::ribbon::enabled(app, id), egui::Button::new(crate::lang::tr(&l))).clicked() {
+            if ui.add_enabled(crate::ribbon::enabled(app, id), egui::Button::new(crate::lang::tr(l))).clicked() {
                 let _ = app.run(id, json!({}));
                 ui.close();
             }
@@ -41,7 +41,7 @@ fn edit_points_menu(app: &mut SlideApp, ui: &mut egui::Ui, sh: &deckcraft_model:
     if let Some((path, index)) = app.session.tool.edit_segment {
         let cur = deckcraft_engine::cmd::points::segment_kind_of(sh, path, index);
         for (l, k) in [("Straight Segment", "straight"), ("Curved Segment", "curved")] {
-            if ui.radio(cur == Some(k), crate::lang::tr(&l)).clicked() {
+            if ui.radio(cur == Some(k), crate::lang::tr(l)).clicked() {
                 let _ = app.run("shape.segmentType", json!({"path": path, "segment": index, "type": k}));
                 ui.close();
             }
@@ -64,7 +64,7 @@ fn edit_points_menu(app: &mut SlideApp, ui: &mut egui::Ui, sh: &deckcraft_model:
             Some(false) => ("Close Path", "shape.closePath", index),
             _ => ("Open Path", "shape.openPath", deckcraft_engine::cmd::points::segment_start_of(sh, path, index).unwrap_or(index)),
         };
-        if ui.button(crate::lang::tr(&label)).clicked() {
+        if ui.button(crate::lang::tr(label)).clicked() {
             let _ = app.run(id, json!({"path": path, "index": at}));
             app.session.tool.edit_segment = None;
             ui.close();
@@ -73,7 +73,7 @@ fn edit_points_menu(app: &mut SlideApp, ui: &mut egui::Ui, sh: &deckcraft_model:
     } else if let Some((path, index)) = app.session.tool.edit_vertex {
         let cur = deckcraft_engine::cmd::points::kind_of(sh, path, index);
         for (l, k) in [("Smooth Point", "smooth"), ("Straight Point", "straight"), ("Corner Point", "corner")] {
-            if ui.radio(cur == Some(k), crate::lang::tr(&l)).clicked() {
+            if ui.radio(cur == Some(k), crate::lang::tr(l)).clicked() {
                 let _ = app.run("shape.pointType", json!({"path": path, "index": index, "type": k}));
                 ui.close();
             }
@@ -87,7 +87,7 @@ fn edit_points_menu(app: &mut SlideApp, ui: &mut egui::Ui, sh: &deckcraft_model:
             Some(false) => ("Close Path", "shape.closePath"),
             _ => ("Open Path", "shape.openPath"),
         };
-        if ui.button(crate::lang::tr(&label)).clicked() {
+        if ui.button(crate::lang::tr(label)).clicked() {
             let _ = app.run(id, json!({"path": path, "index": index}));
             // The points are numbered from the new start now.
             app.session.tool.edit_vertex = None;
@@ -143,7 +143,7 @@ fn spelling_menu(app: &mut SlideApp, ui: &mut egui::Ui, w: &crate::squiggles::Me
         ui.label(egui::RichText::new(crate::lang::tr("(no spelling suggestions)")).weak());
     }
     for to in &w.suggestions {
-        if ui.button(egui::RichText::new(crate::lang::tr(&to)).strong()).clicked() {
+        if ui.button(egui::RichText::new(crate::lang::tr(to)).strong()).clicked() {
             let p = match w.tag {
                 crate::squiggles::Tag::Shape { id, para } => json!({"shape": id, "para": para, "start": w.start, "word": w.word, "to": to}),
                 crate::squiggles::Tag::Cell { id, row, col, para } => {
@@ -177,7 +177,7 @@ fn text_items(app: &mut SlideApp, ui: &mut egui::Ui) {
         ui.close();
     }
     for (l, id) in [("Bullets", "format.bullets"), ("Numbering", "format.numbering")] {
-        if ui.add_enabled(crate::ribbon::enabled(app, id), egui::Button::new(crate::lang::tr(&l))).clicked() {
+        if ui.add_enabled(crate::ribbon::enabled(app, id), egui::Button::new(crate::lang::tr(l))).clicked() {
             let _ = app.run(id, json!({}));
             ui.close();
         }
@@ -278,7 +278,7 @@ fn slide_items(app: &mut SlideApp, ui: &mut egui::Ui) {
             let _ = app.run("view.guides", json!({"on": on}));
         }
         for (label, vertical) in [("Add Vertical Guide", true), ("Add Horizontal Guide", false)] {
-            if ui.button(crate::lang::tr(&label)).clicked() {
+            if ui.button(crate::lang::tr(label)).clicked() {
                 let _ = app.run("guide.add", json!({"vertical": vertical}));
                 let _ = app.run("view.guides", json!({"on": true}));
                 ui.close();

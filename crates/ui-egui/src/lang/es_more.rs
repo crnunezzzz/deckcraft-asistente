@@ -1018,7 +1018,6 @@ pub(super) const ES: &[(&str, &str)] = &[
     ("1 picture with title", "1 imagen con título"),
     ("2 pictures with title", "2 imágenes con título"),
     ("4 pictures with title", "4 imágenes con título"),
-    ("Fit to slide", "Ajustar a la diapositiva"),
     ("Center", "Centro"),
     ("Automatic", "Automático"),
     ("Dark", "Oscuro"),
@@ -1041,4 +1040,8 @@ pub(super) const ES: &[(&str, &str)] = &[
     ("10 pt soft edges", "Bordes suaves de 10 pto"),
     ("25 pt soft edges", "Bordes suaves de 25 pto"),
     ("50 pt soft edges", "Bordes suaves de 50 pto"),
+    ("4 Point Star", "Estrella de 4 puntas"),
+    ("5 Point Star", "Estrella de 5 puntas"),
+    ("6 Point Star", "Estrella de 6 puntas"),
+    ("8 Point Star", "Estrella de 8 puntas"),
 ];

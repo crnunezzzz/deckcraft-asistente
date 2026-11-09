@@ -311,7 +311,7 @@ pub fn slide_menu(app: &mut SlideApp, ui: &mut Ui, i: usize) {
         ("Copy", "edit.copy", json!({"scope": "slides"})),
         ("Paste", "edit.paste", json!({"scope": "slides"})),
     ] {
-        if ui.button(crate::lang::tr(&l)).clicked() {
+        if ui.button(crate::lang::tr(l)).clicked() {
             let _ = app.run(id, p);
             ui.close();
         }

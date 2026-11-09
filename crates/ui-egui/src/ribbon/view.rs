@@ -104,7 +104,7 @@ pub(super) fn zoom_menu(app: &mut SlideApp, ui: &mut Ui) {
     let (mut kind, mut picked): (u8, Vec<usize>) = ui.data_mut(|d| d.get_temp(id).unwrap_or((0, vec![])));
     ui.horizontal(|ui| {
         for (k, label) in [(0u8, "Slide Zoom"), (1, "Section Zoom"), (2, "Summary Zoom")] {
-            if ui.selectable_label(kind == k, crate::lang::tr(&label)).clicked() && kind != k {
+            if ui.selectable_label(kind == k, crate::lang::tr(label)).clicked() && kind != k {
                 kind = k;
                 picked.clear();
             }
@@ -129,7 +129,7 @@ pub(super) fn zoom_menu(app: &mut SlideApp, ui: &mut Ui) {
     egui::ScrollArea::vertical().max_height(260.0).show(ui, |ui| {
         for (i, label) in items.iter().enumerate() {
             let mut on = picked.contains(&i);
-            if ui.checkbox(&mut on, crate::lang::tr(&label)).changed() {
+            if ui.checkbox(&mut on, crate::lang::tr(label)).changed() {
                 if on {
                     picked.push(i);
                 } else {

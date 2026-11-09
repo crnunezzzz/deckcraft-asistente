@@ -156,7 +156,7 @@ pub fn palette(app: &mut SlideApp, ctx: &egui::Context) {
             egui::ScrollArea::vertical().max_height(320.0).show(ui, |ui| {
                 for (k, (id, label, sc)) in items.iter().enumerate() {
                     let r = ui.horizontal(|ui| {
-                        let resp = ui.selectable_label(k == sel, crate::lang::tr(&label));
+                        let resp = ui.selectable_label(k == sel, crate::lang::tr(label));
                         if let Some(s) = sc {
                             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                                 ui.label(egui::RichText::new(crate::lang::tr(&crate::ribbon::pretty_shortcut(s))).color(t.text_faint));

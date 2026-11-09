@@ -29,7 +29,7 @@ pub(super) fn animation(app: &mut SlideApp, ui: &mut Ui) {
             (false, Some(_)) => "▶ Play From",
             (false, None) => "▶ Play All",
         };
-        if ui.button(crate::lang::tr(&label)).clicked() {
+        if ui.button(crate::lang::tr(label)).clicked() {
             let p = match (playing, from) {
                 (false, Some(i)) => json!({"on": true, "from": i}),
                 _ => json!({"on": !playing}),
@@ -149,7 +149,7 @@ pub(super) fn animation(app: &mut SlideApp, ui: &mut Ui) {
         }
         resp.context_menu(|ui| {
             for (l, v) in [("Start On Click", "onClick"), ("Start With Previous", "withPrevious"), ("Start After Previous", "afterPrevious")] {
-                if ui.button(crate::lang::tr(&l)).clicked() {
+                if ui.button(crate::lang::tr(l)).clicked() {
                     run(app, "animation.timing", json!({"index": i, "start": v}));
                     ui.close();
                 }

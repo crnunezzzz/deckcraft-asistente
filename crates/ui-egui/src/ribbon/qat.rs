@@ -184,7 +184,7 @@ pub fn ribbon_menu(app: &mut SlideApp, r: &egui::Response, icon: Icon, label: &s
     r.context_menu(|ui| {
         let has = app.ui.qat.iter().any(|q| q.same(id, p));
         let text = if has { "Remove from Quick Access Toolbar" } else { "Add to Quick Access Toolbar" };
-        if ui.button(crate::lang::tr(&text)).clicked() {
+        if ui.button(crate::lang::tr(text)).clicked() {
             let label = label.replace('\n', " ");
             let key = if has { "remove" } else { "add" };
             let _ = command(app, &json!({key: id, "params": p, "label": label, "icon": icon.name()}));

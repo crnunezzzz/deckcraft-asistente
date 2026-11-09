@@ -76,7 +76,7 @@ fn effects_tab(app: &mut SlideApp, ui: &mut Ui, sh: &deckcraft_model::Shape) {
     ui.label(egui::RichText::new(crate::lang::tr("Reflection")).font(theme::bold(13.0)));
     ui.horizontal_wrapped(|ui| {
         for (l, v) in [("None", "none"), ("Tight", "tight"), ("Half", "half"), ("Full", "full")] {
-            if ui.button(crate::lang::tr(&l)).clicked() {
+            if ui.button(crate::lang::tr(l)).clicked() {
                 run(app, "shape.effects", json!({"reflection": v}));
             }
         }
@@ -178,7 +178,7 @@ fn size_tab(app: &mut SlideApp, ui: &mut Ui, sh: &deckcraft_model::Shape, x: dec
     let mut fields = |ui: &mut Ui, label: &str, id: &str, v: f64, key: &str, cmd: &str, angle: bool| {
         let (unit, suffix) = if angle { (1.0, "°") } else { (len.points_per_unit(), len.suffix()) };
         ui.horizontal(|ui| {
-            ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+            ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
             if let Some(nv) = widgets::spinner(ui, id, label, v / unit, 0.1, suffix, 70.0) {
                 let mut p = json!({key: nv * unit});
                 if cmd == "shape.resize" && locked {
@@ -195,7 +195,7 @@ fn size_tab(app: &mut SlideApp, ui: &mut Ui, sh: &deckcraft_model::Shape, x: dec
     for (label, id, cur, base, key) in [("Scale Height", "fsh", x.h, base_h, "h"), ("Scale Width", "fsw", x.w, base_w, "w")] {
         ui.add_enabled_ui(single, |ui| {
             ui.horizontal(|ui| {
-                ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+                ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
                 let pct = if base > 0.0 { cur / base * 100.0 } else { 100.0 };
                 if let Some(nv) = widgets::spinner(ui, id, label, pct, 1.0, "%", 70.0)
                     && nv > 0.0
@@ -218,7 +218,7 @@ fn size_tab(app: &mut SlideApp, ui: &mut Ui, sh: &deckcraft_model::Shape, x: dec
         ui.horizontal(|ui| {
             ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr("From")));
             let combo = craft_ui::ComboBox::from_id_salt("fmt-origin")
-                .selected_text(crate::lang::tr(&(if center { "Center" } else { "Top Left Corner" })))
+                .selected_text(crate::lang::tr(if center { "Center" } else { "Top Left Corner" }))
                 .show_ui(ui, |ui| {
                     ui.selectable_value(&mut center, false, "Top Left Corner");
                     ui.selectable_value(&mut center, true, "Center");
@@ -235,7 +235,7 @@ fn size_tab(app: &mut SlideApp, ui: &mut Ui, sh: &deckcraft_model::Shape, x: dec
     let (px, py) = (x.x + dx, x.y + dy);
     let mut pos = |ui: &mut Ui, label: &str, id: &str, v: f64, off: f64, key: &str| {
         ui.horizontal(|ui| {
-            ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+            ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
             if let Some(nv) = widgets::spinner(ui, id, label, v / len.points_per_unit(), 0.1, len.suffix(), 70.0) {
                 run(app, "shape.move", json!({key: nv * len.points_per_unit() - off}));
             }
@@ -310,7 +310,7 @@ pub(super) fn format_shape(app: &mut SlideApp, ui: &mut Ui) {
                 ("Bottom", "bottom", b.inset_b.unwrap_or(3.6)),
             ] {
                 ui.horizontal(|ui| {
-                    ui.add_sized(vec2(60.0, 20.0), egui::Label::new(crate::lang::tr(&l)));
+                    ui.add_sized(vec2(60.0, 20.0), egui::Label::new(crate::lang::tr(l)));
                     if let Some(nv) = widgets::spinner(ui, &format!("m{k}"), l, v, 1.0, " pt", 60.0) {
                         run(app, "format.margins", json!({k: nv.max(0.0)}));
                     }
@@ -379,7 +379,7 @@ pub(super) fn format_shape(app: &mut SlideApp, ui: &mut Ui) {
                 if k == "background" && !background_ok {
                     continue;
                 }
-                if ui.radio(kind == k, crate::lang::tr(&l)).clicked() {
+                if ui.radio(kind == k, crate::lang::tr(l)).clicked() {
                     match k {
                         "none" => run(app, "shape.fill", json!({"none": true})),
                         "solid" => run(app, "shape.fill", json!({"color": "accent1"})),
@@ -492,11 +492,11 @@ pub(super) fn format_shape(app: &mut SlideApp, ui: &mut Ui) {
 /// `shape.line` with `{key: value}`.
 fn line_choice(app: &mut SlideApp, ui: &mut Ui, label: &str, key: &str, current: &str, items: &[(&str, &str)]) {
     ui.horizontal(|ui| {
-        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
         let shown = items.iter().find(|(_, v)| *v == current).map_or(current, |(l, _)| *l);
-        let combo = craft_ui::ComboBox::from_id_salt(("fmt-line", key)).selected_text(crate::lang::tr(&shown)).width(120.0).show_ui(ui, |ui| {
+        let combo = craft_ui::ComboBox::from_id_salt(("fmt-line", key)).selected_text(crate::lang::tr(shown)).width(120.0).show_ui(ui, |ui| {
             for (l, v) in items {
-                if ui.selectable_label(*v == current, crate::lang::tr(*l)).clicked() {
+                if ui.selectable_label(*v == current, crate::lang::tr(l)).clicked() {
                     run(app, "shape.line", json!({key: v}));
                 }
             }
@@ -565,7 +565,7 @@ fn fx_slider(
     scale: f64,
 ) {
     ui.horizontal(|ui| {
-        let label = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+        let label = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
         // Hold the value while dragging; otherwise follow the shape.
         let sid = ui.scope_id().with(id);
         let mut v: f64 = ui.data_mut(|d| d.get_temp(sid)).unwrap_or(value);
@@ -610,7 +610,7 @@ fn pick_fill_picture(app: &mut SlideApp) {
 /// when it changes.
 fn pic_drag(app: &mut SlideApp, ui: &mut Ui, label: &str, value: f64, suffix: &str, key: &str, scale: f64) {
     ui.horizontal(|ui| {
-        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
         let mut v = value;
         let r = ui.add(egui::DragValue::new(&mut v).suffix(suffix).max_decimals(1)).labelled_by(field.id);
         if r.drag_stopped() || r.lost_focus() || (r.changed() && !r.dragged()) {
@@ -652,11 +652,11 @@ fn picture_fill_options(app: &mut SlideApp, ui: &mut Ui, id: u32, pf: &deckcraft
             let mirrors = [("none", "None"), ("x", "Horizontal"), ("y", "Vertical"), ("xy", "Both")];
             for (label, key, opts, cur) in [("Alignment", "align", &aligns[..], align), ("Mirror type", "mirror", &mirrors[..], flip)] {
                 ui.horizontal(|ui| {
-                    let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+                    let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
                     let shown = opts.iter().find(|(k, _)| k == cur).map_or(opts[0].1, |(_, l)| *l);
-                    let combo = craft_ui::ComboBox::from_id_salt(("picfill", id, key)).selected_text(crate::lang::tr(&shown)).show_ui(ui, |ui| {
+                    let combo = craft_ui::ComboBox::from_id_salt(("picfill", id, key)).selected_text(crate::lang::tr(shown)).show_ui(ui, |ui| {
                         for (k, l) in opts {
-                            if ui.selectable_label(*k == cur.as_str(), crate::lang::tr(*l)).clicked() {
+                            if ui.selectable_label(*k == cur.as_str(), crate::lang::tr(l)).clicked() {
                                 run(app, "shape.fill", json!({"pictureProps": {key: k}}));
                             }
                         }
@@ -668,7 +668,7 @@ fn picture_fill_options(app: &mut SlideApp, ui: &mut Ui, id: u32, pf: &deckcraft
         PictureMode::Stretch { fill_rect } => {
             for (i, label) in ["Offset left", "Offset top", "Offset right", "Offset bottom"].into_iter().enumerate() {
                 ui.horizontal(|ui| {
-                    let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+                    let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
                     let mut v = fill_rect[i] * 100.0;
                     let r = ui.add(egui::DragValue::new(&mut v).suffix("%").max_decimals(0)).labelled_by(field.id);
                     if r.drag_stopped() || r.lost_focus() || (r.changed() && !r.dragged()) {
@@ -705,7 +705,7 @@ fn preset_label(name: &str) -> String {
 /// A drop-down of `options`; picking one runs `shape.effects` with `{threeD: {key: option}}`.
 fn three_d_combo(app: &mut SlideApp, ui: &mut Ui, id: u32, label: &str, key: &str, cur: &str, options: &[&str]) {
     ui.horizontal(|ui| {
-        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
         let combo =
             craft_ui::ComboBox::from_id_salt(("3d", id, key)).selected_text(crate::lang::tr(&preset_label(cur))).width(170.0).show_ui(ui, |ui| {
                 for o in options {
@@ -721,7 +721,7 @@ fn three_d_combo(app: &mut SlideApp, ui: &mut Ui, id: u32, label: &str, key: &st
 /// A number field running `shape.effects` with `{threeD: {key: value}}` when it changes.
 fn three_d_drag(app: &mut SlideApp, ui: &mut Ui, label: &str, value: f64, suffix: &str, key: &str) {
     ui.horizontal(|ui| {
-        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+        let field = ui.add_sized(vec2(90.0, 20.0), egui::Label::new(crate::lang::tr(label)));
         let mut v = value;
         let r = ui.add(egui::DragValue::new(&mut v).suffix(suffix).max_decimals(1)).labelled_by(field.id);
         if r.drag_stopped() || r.lost_focus() || (r.changed() && !r.dragged()) {

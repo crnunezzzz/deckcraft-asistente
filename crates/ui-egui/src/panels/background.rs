@@ -24,7 +24,7 @@ pub(super) fn background(app: &mut SlideApp, ui: &mut Ui) {
         ("Pattern fill", "pattern"),
         ("Follow the layout", "auto"),
     ] {
-        if ui.radio(kind == k, crate::lang::tr(&l)).clicked() && kind != k {
+        if ui.radio(kind == k, crate::lang::tr(l)).clicked() && kind != k {
             match k {
                 "solid" => run(app, "design.background", json!({"color": "bg1"})),
                 "gradient" => {
@@ -131,7 +131,7 @@ fn picture_background_options(app: &mut SlideApp, ui: &mut Ui, pf: &deckcraft_mo
         ("Scale Y", "bg-sy", *sy * 100.0, "%", 0.01),
     ] {
         ui.horizontal(|ui| {
-            ui.add_sized(vec2(72.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+            ui.add_sized(vec2(72.0, 20.0), egui::Label::new(crate::lang::tr(label)));
             if let Some(v) = widgets::spinner(ui, id, label, value, if scale < 1.0 { 5.0 } else { 1.0 }, suffix, 64.0) {
                 let key = match id {
                     "bg-ox" => "offsetX",
@@ -156,7 +156,7 @@ fn picture_background_options(app: &mut SlideApp, ui: &mut Ui, pf: &deckcraft_mo
     };
     ui.horizontal(|ui| {
         let field = ui.add_sized(vec2(72.0, 20.0), egui::Label::new(crate::lang::tr("Alignment")));
-        let combo = craft_ui::ComboBox::from_id_salt("bg-align").selected_text(crate::lang::tr(&align_name)).width(140.0).show_ui(ui, |ui| {
+        let combo = craft_ui::ComboBox::from_id_salt("bg-align").selected_text(crate::lang::tr(align_name)).width(140.0).show_ui(ui, |ui| {
             for (k, l) in [
                 ("tl", "Top Left"),
                 ("t", "Top"),
@@ -168,7 +168,7 @@ fn picture_background_options(app: &mut SlideApp, ui: &mut Ui, pf: &deckcraft_mo
                 ("b", "Bottom"),
                 ("br", "Bottom Right"),
             ] {
-                if ui.selectable_label(align == k, crate::lang::tr(&l)).clicked() {
+                if ui.selectable_label(align == k, crate::lang::tr(l)).clicked() {
                     run(app, "design.background", json!({"pictureProps": {"align": k}}));
                 }
             }
@@ -183,9 +183,9 @@ fn picture_background_options(app: &mut SlideApp, ui: &mut Ui, pf: &deckcraft_mo
     };
     ui.horizontal(|ui| {
         let field = ui.add_sized(vec2(72.0, 20.0), egui::Label::new(crate::lang::tr("Mirror")));
-        let combo = craft_ui::ComboBox::from_id_salt("bg-mirror").selected_text(crate::lang::tr(&mirror_name)).width(140.0).show_ui(ui, |ui| {
+        let combo = craft_ui::ComboBox::from_id_salt("bg-mirror").selected_text(crate::lang::tr(mirror_name)).width(140.0).show_ui(ui, |ui| {
             for (k, l) in [("none", "None"), ("x", "Horizontal"), ("y", "Vertical"), ("xy", "Both")] {
-                if ui.selectable_label(flip == k, crate::lang::tr(&l)).clicked() {
+                if ui.selectable_label(flip == k, crate::lang::tr(l)).clicked() {
                     run(app, "design.background", json!({"pictureProps": {"mirror": k}}));
                 }
             }

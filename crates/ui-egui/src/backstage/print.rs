@@ -97,11 +97,11 @@ pub(super) fn print(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
                 PrintScope::Custom => "Custom Range",
             };
             let combo =
-                craft_ui::ComboBox::from_id_salt("backstage_print_scope").width(240.0).selected_text(crate::lang::tr(&scope)).show_ui(ui, |ui| {
+                craft_ui::ComboBox::from_id_salt("backstage_print_scope").width(240.0).selected_text(crate::lang::tr(scope)).show_ui(ui, |ui| {
                     for (s, label) in
                         [(PrintScope::All, "Print All Slides"), (PrintScope::Current, "Print Current Slide"), (PrintScope::Custom, "Custom Range")]
                     {
-                        if ui.selectable_label(bs.print_scope == s, crate::lang::tr(&label)).clicked() {
+                        if ui.selectable_label(bs.print_scope == s, crate::lang::tr(label)).clicked() {
                             bs.print_scope = s;
                             bs.preview_page = 0;
                         }
@@ -121,9 +121,9 @@ pub(super) fn print(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
             ui.add_space(4.0);
             let layout = LAYOUTS.iter().find(|l| l.0 == bs.print_layout).map_or("Full Page Slides", |l| l.1);
             let combo =
-                craft_ui::ComboBox::from_id_salt("backstage_print_layout").width(240.0).selected_text(crate::lang::tr(&layout)).show_ui(ui, |ui| {
+                craft_ui::ComboBox::from_id_salt("backstage_print_layout").width(240.0).selected_text(crate::lang::tr(layout)).show_ui(ui, |ui| {
                     for (id, label) in LAYOUTS {
-                        if ui.selectable_label(bs.print_layout == id, crate::lang::tr(&label)).clicked() {
+                        if ui.selectable_label(bs.print_layout == id, crate::lang::tr(label)).clicked() {
                             bs.print_layout = id;
                             bs.preview_page = 0;
                         }
@@ -137,10 +137,10 @@ pub(super) fn print(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
                 let paper = deckcraft_engine::cmd::file::PAPERS.iter().find(|p| p.0 == bs.print_paper).map_or("Letter", |p| p.1);
                 craft_ui::ComboBox::from_id_salt("backstage_print_paper")
                     .width(240.0)
-                    .selected_text(crate::lang::tr(&paper))
+                    .selected_text(crate::lang::tr(paper))
                     .show_ui(ui, |ui| {
                         for (id, label, _) in deckcraft_engine::cmd::file::PAPERS {
-                            if ui.selectable_label(bs.print_paper == id, crate::lang::tr(&label)).clicked() {
+                            if ui.selectable_label(bs.print_paper == id, crate::lang::tr(label)).clicked() {
                                 bs.print_paper = id;
                             }
                         }
@@ -151,10 +151,10 @@ pub(super) fn print(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
                 let orient = if bs.print_landscape { "Landscape Orientation" } else { "Portrait Orientation" };
                 craft_ui::ComboBox::from_id_salt("backstage_print_orientation")
                     .width(240.0)
-                    .selected_text(crate::lang::tr(&orient))
+                    .selected_text(crate::lang::tr(orient))
                     .show_ui(ui, |ui| {
                         for (land, label) in [(false, "Portrait Orientation"), (true, "Landscape Orientation")] {
-                            if ui.selectable_label(bs.print_landscape == land, crate::lang::tr(&label)).clicked() {
+                            if ui.selectable_label(bs.print_landscape == land, crate::lang::tr(label)).clicked() {
                                 bs.print_landscape = land;
                             }
                         }

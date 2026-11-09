@@ -58,7 +58,7 @@ fn warp_tile(ui: &mut Ui, preset: &str, label: &str, selected: bool) -> bool {
         ui.painter().rect_filled(rect, CornerRadius::same(3), t.hover);
     }
     paint_warp_icon(ui.painter(), rect.shrink(4.0), (!preset.is_empty()).then_some(preset), t.text);
-    resp.on_hover_text(crate::lang::tr(&label)).clicked()
+    resp.on_hover_text(crate::lang::tr(label)).clicked()
 }
 
 /// The preset's guides, or two straight lines for No Transform.
@@ -136,7 +136,7 @@ pub(super) fn shape_format(app: &mut SlideApp, ui: &mut Ui) {
         let r = big_button(ui, Icon::MergeShapes, "Merge\nShapes", can_merge).on_hover_text(crate::lang::tr("Merge Shapes"));
         egui::Popup::menu(&r).show(|ui| {
             for (op, label) in deckcraft_engine::cmd::merge::OPS {
-                if ui.button(crate::lang::tr(&label)).clicked() {
+                if ui.button(crate::lang::tr(label)).clicked() {
                     run(app, "shape.merge", json!({"op": op}));
                     ui.close();
                 }

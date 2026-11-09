@@ -56,7 +56,7 @@ pub(super) fn tabs_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bo
     ui.horizontal(|ui| {
         ui.label(crate::lang::tr("Alignment:"));
         for (k, label) in TAB_KINDS {
-            if ui.radio(cur == k, crate::lang::tr(&label)).clicked() {
+            if ui.radio(cur == k, crate::lang::tr(label)).clicked() {
                 d.fields.insert("newalign".into(), k.into());
             }
         }

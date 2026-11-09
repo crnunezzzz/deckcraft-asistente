@@ -76,7 +76,7 @@ fn template_tiles(app: &mut SlideApp, ui: &mut Ui, query: &str, limit: usize) ->
         ui.spacing_mut().item_spacing = vec2(10.0, 10.0);
         for starter in list.into_iter().take(limit) {
             let theme = deckcraft_model::theme::builtin_themes().into_iter().find(|th| th.name == starter.theme);
-            if tile(ui, starter.name, theme.as_ref(), false).on_hover_text(crate::lang::tr(&starter.summary)).clicked() {
+            if tile(ui, starter.name, theme.as_ref(), false).on_hover_text(crate::lang::tr(starter.summary)).clicked() {
                 let _ = app.run("file.new", json!({"template": starter.name}));
             }
         }
@@ -200,7 +200,7 @@ pub(super) fn task(ui: &mut Ui, icon: Icon, button: &str, title: &str, detail: &
         ui.add_space(12.0);
         ui.vertical(|ui| {
             ui.add_space(4.0);
-            ui.label(RichText::new(crate::lang::tr(&title)).font(theme::font(15.0)).color(t.text));
+            ui.label(RichText::new(crate::lang::tr(title)).font(theme::font(15.0)).color(t.text));
             dim(ui, detail);
         });
     });

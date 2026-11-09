@@ -788,7 +788,7 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
         let mut child =
             ui.new_child(egui::UiBuilder::new().max_rect(bar.shrink2(vec2(10.0, 4.0))).layout(egui::Layout::left_to_right(egui::Align::Center)));
         let b =
-            |ui: &mut Ui, s: &str| ui.add(egui::Button::new(egui::RichText::new(crate::lang::tr(&s)).color(Color32::WHITE).size(15.0)).frame(false));
+            |ui: &mut Ui, s: &str| ui.add(egui::Button::new(egui::RichText::new(crate::lang::tr(s)).color(Color32::WHITE).size(15.0)).frame(false));
         if b(&mut child, "◀").clicked() {
             let a = show.state.prev(doc);
             show.apply(a, doc, now);

@@ -41,7 +41,7 @@ pub(super) fn date_time_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) 
     let format = d.get("format", "datetime1");
     egui::ScrollArea::vertical().max_height(280.0).min_scrolled_height(220.0).auto_shrink([false, false]).show(ui, |ui| {
         for (kind, sample) in &rows {
-            if ui.selectable_label(format == *kind, crate::lang::tr(&sample)).clicked() {
+            if ui.selectable_label(format == *kind, crate::lang::tr(sample)).clicked() {
                 d.fields.insert("format".into(), (*kind).to_string());
             }
         }
@@ -49,9 +49,9 @@ pub(super) fn date_time_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) 
     let lang_label = DATE_LANGS.iter().find(|(k, _)| *k == lang).map(|(_, l)| *l).unwrap_or("English (United States)");
     ui.horizontal(|ui| {
         ui.label(crate::lang::tr("Language:"));
-        let opened = craft_ui::ComboBox::from_id_salt("date-lang").selected_text(crate::lang::tr(&lang_label)).width(240.0).show_ui(ui, |ui| {
+        let opened = craft_ui::ComboBox::from_id_salt("date-lang").selected_text(crate::lang::tr(lang_label)).width(240.0).show_ui(ui, |ui| {
             for (k, l) in DATE_LANGS {
-                if ui.selectable_label(lang == *k, crate::lang::tr(*l)).clicked() {
+                if ui.selectable_label(lang == *k, crate::lang::tr(l)).clicked() {
                     d.fields.insert("language".into(), (*k).to_string());
                 }
             }

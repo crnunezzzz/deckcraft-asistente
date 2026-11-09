@@ -473,7 +473,7 @@ fn heading(ui: &mut Ui, text: &str) {
 
 fn dim(ui: &mut Ui, text: &str) {
     let t = Tokens::get(ui.ctx());
-    ui.label(RichText::new(crate::lang::tr(&text)).font(theme::font(12.5)).color(t.text_dim));
+    ui.label(RichText::new(crate::lang::tr(text)).font(theme::font(12.5)).color(t.text_dim));
 }
 
 /// A link with an arrow (More themes →): true when clicked.
@@ -498,7 +498,7 @@ fn icon_button(ui: &mut Ui, icon: Icon, label: &str, enabled: bool) -> bool {
         ui.painter().rect_filled(r, CornerRadius::same(3), t.hover);
     }
     icons::paint(ui.painter(), r.shrink(3.0), icon, t.text, !enabled);
-    resp.on_hover_text(crate::lang::tr(&label)).clicked()
+    resp.on_hover_text(crate::lang::tr(label)).clicked()
 }
 
 fn bullets(ui: &mut Ui, items: &[&str]) {

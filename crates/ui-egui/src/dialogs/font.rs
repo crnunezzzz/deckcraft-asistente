@@ -27,12 +27,12 @@ pub(super) fn font_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bo
     ui.horizontal(|ui| {
         let field = ui.add_sized(vec2(88.0, 20.0), egui::Label::new(crate::lang::tr("Font")));
         let combo = craft_ui::ComboBox::from_id_salt("font_dialog_family")
-            .selected_text(crate::lang::tr(&(if family.is_empty() { " " } else { family.as_str() })))
+            .selected_text(crate::lang::tr(if family.is_empty() { " " } else { family.as_str() }))
             .width(300.0)
             .show_ui(ui, |ui| {
                 egui::ScrollArea::vertical().max_height(280.0).show(ui, |ui| {
                     for f in &fams {
-                        if ui.selectable_label(family == *f, crate::lang::tr(&f)).clicked() {
+                        if ui.selectable_label(family == *f, crate::lang::tr(f)).clicked() {
                             d.fields.insert("family".into(), f.clone());
                         }
                     }
@@ -76,20 +76,18 @@ pub(super) fn font_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bo
         let edited = ui.add(egui::TextEdit::singleline(&mut spacing).desired_width(64.0).hint_text(crate::lang::tr("pt")));
         let mut picked = None;
         let combo = craft_ui::ComboBox::from_id_salt("font_dialog_spacing")
-            .selected_text(crate::lang::tr(
-                &(match spacing.as_str() {
-                    "-3" => "Very tight",
-                    "-1.5" => "Tight",
-                    "0" => "Normal",
-                    "3" => "Loose",
-                    "6" => "Very loose",
-                    other => other,
-                }),
-            ))
+            .selected_text(crate::lang::tr(match spacing.as_str() {
+                "-3" => "Very tight",
+                "-1.5" => "Tight",
+                "0" => "Normal",
+                "3" => "Loose",
+                "6" => "Very loose",
+                other => other,
+            }))
             .width(120.0)
             .show_ui(ui, |ui| {
                 for (v, l) in [("-3", "Very tight"), ("-1.5", "Tight"), ("0", "Normal"), ("3", "Loose"), ("6", "Very loose")] {
-                    if ui.selectable_label(spacing == v, crate::lang::tr(&l)).clicked() {
+                    if ui.selectable_label(spacing == v, crate::lang::tr(l)).clicked() {
                         picked = Some(v.to_string());
                     }
                 }

@@ -72,7 +72,7 @@ pub(super) fn table_design(app: &mut SlideApp, ui: &mut Ui) {
                 for (id, label) in &styles {
                     let (r, resp) = ui.allocate_exact_size(vec2(48.0, 36.0), Sense::click());
                     paint_table_style(ui.painter(), r.shrink(2.0), id, &sc);
-                    if resp.on_hover_text(crate::lang::tr(&label)).clicked() {
+                    if resp.on_hover_text(crate::lang::tr(label)).clicked() {
                         run(app, "table.style", json!({"style": id}));
                         ui.close();
                     }
@@ -129,7 +129,7 @@ pub(super) fn table_design(app: &mut SlideApp, ui: &mut Ui) {
             ui.menu_button(crate::lang::tr("Pen Style"), |ui| {
                 for (l, d) in [("Solid", "solid"), ("Dash", "dash"), ("Dot", "sysDot"), ("Dash Dot", "dashDot"), ("Long Dash", "lgDash")] {
                     let cur = app.table_pen.get("dash").and_then(Value::as_str).unwrap_or("solid") == d;
-                    if ui.radio(cur, crate::lang::tr(&l)).clicked() {
+                    if ui.radio(cur, crate::lang::tr(l)).clicked() {
                         app.table_pen["dash"] = json!(d);
                     }
                 }
@@ -226,7 +226,7 @@ pub(super) fn table_layout(app: &mut SlideApp, ui: &mut Ui) {
                 }
                 ui.menu_button(crate::lang::tr("Cell Margins"), |ui| {
                     for (l, preset) in [("Normal", "normal"), ("None", "none"), ("Narrow", "narrow"), ("Wide", "wide")] {
-                        if ui.button(crate::lang::tr(&l)).clicked() {
+                        if ui.button(crate::lang::tr(l)).clicked() {
                             run(app, "table.cellMargins", json!({"preset": preset}));
                             ui.close();
                         }

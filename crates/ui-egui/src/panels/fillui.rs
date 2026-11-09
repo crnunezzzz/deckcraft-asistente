@@ -174,9 +174,9 @@ pub fn gradient_editor(ui: &mut Ui, id: &str, g: &Gradient, sc: &ColorScheme) ->
     };
     ui.horizontal(|ui| {
         let field = ui.add_sized(vec2(70.0, 20.0), egui::Label::new(crate::lang::tr("Type")));
-        let combo = craft_ui::ComboBox::from_id_salt((id, "kind")).selected_text(crate::lang::tr(&kind)).width(120.0).show_ui(ui, |ui| {
+        let combo = craft_ui::ComboBox::from_id_salt((id, "kind")).selected_text(crate::lang::tr(kind)).width(120.0).show_ui(ui, |ui| {
             for k in ["Linear", "Radial", "Rectangular", "Path"] {
-                if ui.selectable_label(kind == k, crate::lang::tr(&k)).clicked() && kind != k {
+                if ui.selectable_label(kind == k, crate::lang::tr(k)).clicked() && kind != k {
                     let focus = match &g.shape {
                         GradientShape::Path { focus, .. } => *focus,
                         _ => [0.5, 0.5, 0.5, 0.5],
@@ -199,7 +199,7 @@ pub fn gradient_editor(ui: &mut Ui, id: &str, g: &Gradient, sc: &ColorScheme) ->
             GradientShape::Linear { angle, .. } => {
                 for (l, a) in DIRECTIONS_LINEAR {
                     let on = (angle - a).abs() < 0.5;
-                    if ui.selectable_label(on, crate::lang::tr(&l)).on_hover_text(format!("{a}°")).clicked() {
+                    if ui.selectable_label(on, crate::lang::tr(l)).on_hover_text(format!("{a}°")).clicked() {
                         out = Some(Gradient { shape: GradientShape::Linear { angle: a, scaled: false }, ..g.clone() });
                     }
                 }
@@ -207,7 +207,7 @@ pub fn gradient_editor(ui: &mut Ui, id: &str, g: &Gradient, sc: &ColorScheme) ->
             GradientShape::Path { path, focus } => {
                 for (l, f) in DIRECTIONS_PATH {
                     let on = focus.iter().zip(f).all(|(a, b)| (a - b).abs() < 1e-3);
-                    if ui.selectable_label(on, crate::lang::tr(&l.trim_start_matches("From "))).on_hover_text(crate::lang::tr(&l)).clicked() {
+                    if ui.selectable_label(on, crate::lang::tr(l.trim_start_matches("From "))).on_hover_text(crate::lang::tr(l)).clicked() {
                         out = Some(Gradient { shape: GradientShape::Path { path: path.clone(), focus: f }, ..g.clone() });
                     }
                 }
@@ -490,14 +490,14 @@ pub fn pattern_editor(ui: &mut Ui, pt: &PatternFill, sc: &ColorScheme) -> Option
             ui.painter().rect_stroke(r.shrink(1.0), CornerRadius::same(2), stroke, egui::StrokeKind::Inside);
             let label = pattern_label(name);
             resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, on, label));
-            if resp.on_hover_text(crate::lang::tr(&label)).clicked() && !on {
+            if resp.on_hover_text(crate::lang::tr(label)).clicked() && !on {
                 out = Some(PatternFill { preset: name.to_string(), ..pt.clone() });
             }
         }
     });
     for (label, foreground) in [("Foreground", true), ("Background", false)] {
         ui.horizontal(|ui| {
-            ui.add_sized(vec2(80.0, 20.0), egui::Label::new(crate::lang::tr(&label)));
+            ui.add_sized(vec2(80.0, 20.0), egui::Label::new(crate::lang::tr(label)));
             let cur = if foreground { &pt.fg } else { &pt.bg };
             let (sw, _) = ui.allocate_exact_size(vec2(18.0, 18.0), Sense::hover());
             ui.painter().rect(sw, CornerRadius::same(3), c32(cur, sc), Stroke::new(1.0, t.border), egui::StrokeKind::Inside);

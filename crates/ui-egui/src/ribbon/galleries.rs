@@ -81,7 +81,7 @@ pub(super) fn smartart_gallery(
             if kinds.is_empty() {
                 continue;
             }
-            ui.label(egui::RichText::new(crate::lang::tr(&title)).strong());
+            ui.label(egui::RichText::new(crate::lang::tr(title)).strong());
             egui::Grid::new(("smartart_gallery", cat)).num_columns(4).spacing([6.0, 6.0]).show(ui, |ui| {
                 for (i, (k, label)) in kinds.iter().enumerate() {
                     let ctx = ui.ctx().clone();
@@ -95,9 +95,9 @@ pub(super) fn smartart_gallery(
                                 }
                                 None => ui.add_sized([96.0, 60.0], egui::Button::new("").selected(*k == current)),
                             };
-                            ui.add(egui::Label::new(egui::RichText::new(crate::lang::tr(*label)).small()).truncate().selectable(false));
+                            ui.add(egui::Label::new(egui::RichText::new(crate::lang::tr(label)).small()).truncate().selectable(false));
                             r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, *label));
-                            r.on_hover_text(crate::lang::tr(*label))
+                            r.on_hover_text(crate::lang::tr(label))
                         })
                         .inner;
                     if r.hovered() {
@@ -131,7 +131,7 @@ pub fn shapes_gallery(ui: &mut Ui) -> Option<&'static str> {
     ui.set_max_width(330.0);
     egui::ScrollArea::vertical().max_height(420.0).show(ui, |ui| {
         for cat in deckcraft_geom::preset::Category::ALL {
-            ui.label(egui::RichText::new(crate::lang::tr(&cat.label())).font(theme::bold(12.0)));
+            ui.label(egui::RichText::new(crate::lang::tr(cat.label())).font(theme::bold(12.0)));
             ui.horizontal_wrapped(|ui| {
                 ui.spacing_mut().item_spacing = vec2(1.0, 1.0);
                 for p in deckcraft_geom::preset::CATALOG.iter().filter(|p| p.category == cat) {
@@ -140,7 +140,7 @@ pub fn shapes_gallery(ui: &mut Ui) -> Option<&'static str> {
                         ui.painter().rect_filled(r, CornerRadius::same(3), t.hover);
                     }
                     paint_preset(ui.painter(), r.shrink(4.0), p.name, Color32::TRANSPARENT, t.text);
-                    if resp.on_hover_text(crate::lang::tr(&p.label)).clicked() {
+                    if resp.on_hover_text(crate::lang::tr(p.label)).clicked() {
                         out = Some(p.name);
                     }
                 }
@@ -151,7 +151,7 @@ pub fn shapes_gallery(ui: &mut Ui) -> Option<&'static str> {
                             ui.painter().rect_filled(r, CornerRadius::same(3), t.hover);
                         }
                         paint_freeform_icon(ui.painter(), r.shrink(5.0), name, t.text);
-                        if resp.on_hover_text(crate::lang::tr(&label)).clicked() {
+                        if resp.on_hover_text(crate::lang::tr(label)).clicked() {
                             out = Some(name);
                         }
                     }
@@ -250,7 +250,7 @@ pub fn outline_menu(app: &mut SlideApp, ui: &mut Ui, sc: &deckcraft_color::Color
             ("Long Dash", "lgDash"),
             ("Long Dash Dot", "lgDashDot"),
         ] {
-            if ui.button(crate::lang::tr(&l)).clicked() {
+            if ui.button(crate::lang::tr(l)).clicked() {
                 run(app, "shape.line", json!({"dash": d}));
                 ui.close();
             }
@@ -265,7 +265,7 @@ pub fn outline_menu(app: &mut SlideApp, ui: &mut Ui, sc: &deckcraft_color::Color
             ("Stealth end", "none", "stealth"),
             ("Oval ends", "oval", "oval"),
         ] {
-            if ui.button(crate::lang::tr(&l)).clicked() {
+            if ui.button(crate::lang::tr(l)).clicked() {
                 run(app, "shape.line", json!({"head": h, "tail": tl}));
                 ui.close();
             }
@@ -283,14 +283,14 @@ pub fn effects_menu(app: &mut SlideApp, ui: &mut Ui) {
             ("Inner", "inner"),
             ("Perspective", "perspective"),
         ] {
-            if ui.button(crate::lang::tr(&l)).clicked() {
+            if ui.button(crate::lang::tr(l)).clicked() {
                 run(app, "shape.effects", json!({"shadow": v}));
             }
         }
     });
     ui.menu_button(crate::lang::tr("Reflection"), |ui| {
         for (l, v) in [("No Reflection", "none"), ("Tight", "tight"), ("Half", "half"), ("Full", "full")] {
-            if ui.button(crate::lang::tr(&l)).clicked() {
+            if ui.button(crate::lang::tr(l)).clicked() {
                 run(app, "shape.effects", json!({"reflection": v}));
             }
         }
@@ -328,7 +328,7 @@ pub fn effects_menu(app: &mut SlideApp, ui: &mut Ui) {
             "hardEdge",
             "artDeco",
         ] {
-            if ui.button(crate::lang::tr(&b)).clicked() {
+            if ui.button(crate::lang::tr(b)).clicked() {
                 run(app, "shape.effects", json!({"bevel": b}));
             }
         }

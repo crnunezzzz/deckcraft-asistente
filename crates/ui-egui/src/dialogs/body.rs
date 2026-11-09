@@ -101,17 +101,18 @@ fn dlg_slide_size(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     }
     let label = ui.label(crate::lang::tr("Slides sized for:"));
     let preset = d.get("preset", "");
-    let combo = craft_ui::ComboBox::from_id_salt("sizes")
-        .selected_text(crate::lang::tr(&(if preset.is_empty() { "Custom" } else { &preset })))
-        .show_ui(ui, |ui| {
+    let combo = craft_ui::ComboBox::from_id_salt("sizes").selected_text(crate::lang::tr(if preset.is_empty() { "Custom" } else { &preset })).show_ui(
+        ui,
+        |ui| {
             for (label, w, h) in deckcraft_model::defaults::SLIDE_SIZES {
-                if ui.selectable_label(preset == *label, crate::lang::tr(*label)).clicked() {
+                if ui.selectable_label(preset == *label, crate::lang::tr(label)).clicked() {
                     d.fields.insert("preset".into(), label.to_string());
                     put_slide_dim(d, "w", *w, ppu);
                     put_slide_dim(d, "h", *h, ppu);
                 }
             }
-        });
+        },
+    );
     let _ = combo.response.labelled_by(label.id);
     let abbr = unit_abbr(len);
     let (w_seed, h_seed) = (field_of(d, "w"), field_of(d, "h"));
@@ -153,7 +154,7 @@ fn dlg_header_footer(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             ui.label(crate::lang::tr("  Format:"));
             craft_ui::ComboBox::from_id_salt("hf-date-format").selected_text(crate::lang::tr(&label)).width(200.0).show_ui(ui, |ui| {
                 for (kind, sample) in &rows {
-                    if ui.selectable_label(fmt == *kind, crate::lang::tr(&sample)).clicked() {
+                    if ui.selectable_label(fmt == *kind, crate::lang::tr(sample)).clicked() {
                         d.fields.insert("dateFormat".into(), (*kind).to_string());
                     }
                 }
@@ -220,7 +221,7 @@ fn dlg_hyperlink(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             let sel = d.get("slide", &slide_default).parse::<usize>().unwrap_or(0);
             egui::ScrollArea::vertical().max_height(180.0).show(ui, |ui| {
                 for (i, t) in titles.iter().enumerate() {
-                    if ui.selectable_label(sel == i, crate::lang::tr(&t)).clicked() {
+                    if ui.selectable_label(sel == i, crate::lang::tr(t)).clicked() {
                         d.fields.insert("slide".into(), i.to_string());
                     }
                 }
@@ -253,7 +254,7 @@ fn dlg_setup_show(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         ("Browsed by an individual (window)", "browsed"),
         ("Browsed at a kiosk (full screen)", "kiosk"),
     ] {
-        if ui.radio(ty == v, crate::lang::tr(&l)).clicked() {
+        if ui.radio(ty == v, crate::lang::tr(l)).clicked() {
             d.fields.insert("type".into(), v.into());
         }
     }
@@ -271,7 +272,7 @@ fn dlg_setup_show(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             d.fields.insert("custom".into(), String::new());
         }
         for n in &names {
-            if ui.selectable_label(&chosen == n, crate::lang::tr(&n)).clicked() {
+            if ui.selectable_label(&chosen == n, crate::lang::tr(n)).clicked() {
                 d.fields.insert("custom".into(), n.clone());
             }
         }
@@ -378,7 +379,7 @@ fn dlg_bullets(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     let tab = d.get("tab", if numbered { "numbered" } else { "bulleted" });
     ui.horizontal(|ui| {
         for (k, l) in [("bulleted", "Bulleted"), ("numbered", "Numbered")] {
-            if ui.selectable_label(tab == k, crate::lang::tr(&l)).clicked() {
+            if ui.selectable_label(tab == k, crate::lang::tr(l)).clicked() {
                 d.fields.insert("tab".into(), k.into());
             }
         }
@@ -403,7 +404,7 @@ fn dlg_bullets(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         for (i, (k, l)) in styles.iter().enumerate() {
             let r = ui.add_sized(
                 vec2(if tab == "numbered" { 88.0 } else { 44.0 }, 40.0),
-                egui::Button::selectable(current == *k, egui::RichText::new(crate::lang::tr(*l)).size(16.0)),
+                egui::Button::selectable(current == *k, egui::RichText::new(crate::lang::tr(l)).size(16.0)),
             );
             if r.clicked() {
                 d.fields.insert(style_key.into(), (*k).into());
@@ -433,10 +434,10 @@ fn dlg_bullets(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     ui.horizontal(|ui| {
         let field = ui.add_sized(vec2(120.0, 20.0), egui::Label::new(crate::lang::tr("Color:")));
         let combo = craft_ui::ComboBox::from_id_salt("bullet-color")
-            .selected_text(crate::lang::tr(&(colors.iter().find(|c| c.0 == color).map_or("Automatic", |c| c.1))))
+            .selected_text(crate::lang::tr(colors.iter().find(|c| c.0 == color).map_or("Automatic", |c| c.1)))
             .show_ui(ui, |ui| {
                 for (k, l) in colors {
-                    if ui.selectable_label(color == k, crate::lang::tr(&l)).clicked() {
+                    if ui.selectable_label(color == k, crate::lang::tr(l)).clicked() {
                         d.fields.insert("color".into(), k.into());
                     }
                 }
@@ -505,7 +506,7 @@ fn dlg_action(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     };
     ui.horizontal(|ui| {
         for (k, l) in [("click", "Mouse Click"), ("hover", "Mouse Over")] {
-            if ui.selectable_label(tab == k, crate::lang::tr(&l)).clicked() && tab != k {
+            if ui.selectable_label(tab == k, crate::lang::tr(l)).clicked() && tab != k {
                 d.fields.clear();
                 d.fields.insert("tab".into(), k.into());
             }
@@ -516,7 +517,7 @@ fn dlg_action(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     let kind = d.get("kind", cur_kind);
     let hyperlink = !matches!(kind.as_str(), "none" | "program" | "playMedia");
     let pick = |d: &mut Dialog, ui: &mut Ui, k: &str, l: &str| {
-        if ui.radio(d.get("kind", cur_kind) == k, crate::lang::tr(&l)).clicked() {
+        if ui.radio(d.get("kind", cur_kind) == k, crate::lang::tr(l)).clicked() {
             d.fields.insert("kind".into(), k.into());
         }
     };
@@ -539,9 +540,9 @@ fn dlg_action(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         ];
         let shown = targets.iter().find(|t| t.0 == kind).map_or("Next Slide", |t| t.1);
         ui.add_enabled_ui(hyperlink, |ui| {
-            let combo = craft_ui::ComboBox::from_id_salt("action-target").selected_text(crate::lang::tr(&shown)).show_ui(ui, |ui| {
+            let combo = craft_ui::ComboBox::from_id_salt("action-target").selected_text(crate::lang::tr(shown)).show_ui(ui, |ui| {
                 for (k, l) in targets {
-                    if ui.selectable_label(kind == k, crate::lang::tr(&l)).clicked() {
+                    if ui.selectable_label(kind == k, crate::lang::tr(l)).clicked() {
                         d.fields.insert("kind".into(), k.into());
                     }
                 }
@@ -556,7 +557,7 @@ fn dlg_action(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             let sel = d.get("arg", if cur_kind == "slide" { &cur_arg } else { "0" }).parse::<usize>().unwrap_or(0);
             egui::ScrollArea::vertical().max_height(140.0).show(ui, |ui| {
                 for (i, (_, t)) in slides.iter().enumerate() {
-                    if ui.selectable_label(sel == i, crate::lang::tr(&t)).clicked() {
+                    if ui.selectable_label(sel == i, crate::lang::tr(t)).clicked() {
                         d.fields.insert("arg".into(), i.to_string());
                     }
                 }
@@ -568,7 +569,7 @@ fn dlg_action(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             }
             let sel = d.get("arg", if cur_kind == "customShow" { &cur_arg } else { shows.first().map_or("", String::as_str) });
             for n in &shows {
-                if ui.selectable_label(&sel == n, crate::lang::tr(&n)).clicked() {
+                if ui.selectable_label(&sel == n, crate::lang::tr(n)).clicked() {
                     d.fields.insert("arg".into(), n.clone());
                 }
             }
@@ -724,7 +725,7 @@ fn dlg_export(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         ("Animated GIF (.gif)", "gif"),
         ("Outline/RTF (.rtf)", "rtf"),
     ] {
-        if ui.radio(fmt == f, crate::lang::tr(&l)).clicked() {
+        if ui.radio(fmt == f, crate::lang::tr(l)).clicked() {
             d.fields.insert("fmt".into(), f.into());
         }
     }
@@ -734,18 +735,16 @@ fn dlg_export(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         ui.horizontal(|ui| {
             let field = ui.label(crate::lang::tr("Print layout:"));
             let combo = craft_ui::ComboBox::from_id_salt("pdf_layout")
-                .selected_text(crate::lang::tr(
-                    &(match pdf_layout.as_str() {
-                        "notes" => "Notes Pages",
-                        "h1" => "Handouts (1 slide per page)",
-                        "h2" => "Handouts (2 slides per page)",
-                        "h3" => "Handouts (3 slides per page)",
-                        "h4" => "Handouts (4 slides per page)",
-                        "h6" => "Handouts (6 slides per page)",
-                        "h9" => "Handouts (9 slides per page)",
-                        _ => "Full Page Slides",
-                    }),
-                ))
+                .selected_text(crate::lang::tr(match pdf_layout.as_str() {
+                    "notes" => "Notes Pages",
+                    "h1" => "Handouts (1 slide per page)",
+                    "h2" => "Handouts (2 slides per page)",
+                    "h3" => "Handouts (3 slides per page)",
+                    "h4" => "Handouts (4 slides per page)",
+                    "h6" => "Handouts (6 slides per page)",
+                    "h9" => "Handouts (9 slides per page)",
+                    _ => "Full Page Slides",
+                }))
                 .show_ui(ui, |ui| {
                     for (k, l) in [
                         ("slides", "Full Page Slides"),
@@ -757,7 +756,7 @@ fn dlg_export(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         ("h6", "Handouts (6 slides per page)"),
                         ("h9", "Handouts (9 slides per page)"),
                     ] {
-                        if ui.selectable_label(pdf_layout == k, crate::lang::tr(&l)).clicked() {
+                        if ui.selectable_label(pdf_layout == k, crate::lang::tr(l)).clicked() {
                             d.fields.insert("pdfLayout".into(), k.into());
                         }
                     }
@@ -783,7 +782,7 @@ fn dlg_export(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     }
     let gif_params = if fmt == "gif" { gif_options(app, ui, d) } else { Ok(Value::Null) };
     if let Err(e) = &gif_params {
-        ui.label(egui::RichText::new(crate::lang::tr(&e)).color(Tokens::get(ui.ctx()).text_dim));
+        ui.label(egui::RichText::new(crate::lang::tr(e)).color(Tokens::get(ui.ctx()).text_dim));
     }
     let pdf_params = {
         let (layout, per) = match pdf_layout.as_str() {
@@ -869,7 +868,7 @@ fn dlg_symbol(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
         ("Shapes", "■□▪▫▲△▶▷▼▽◀◁◆◇○●◎★☆✓✔✗✘♠♣♥♦"),
     ];
     for (g, chars) in groups {
-        ui.label(egui::RichText::new(crate::lang::tr(&g)).font(theme::bold(12.0)));
+        ui.label(egui::RichText::new(crate::lang::tr(g)).font(theme::bold(12.0)));
         ui.horizontal_wrapped(|ui| {
             for c in chars.chars() {
                 if ui.add(egui::Button::new(egui::RichText::new(crate::lang::tr(&c.to_string())).size(16.0)).min_size(vec2(26.0, 26.0))).clicked() {
@@ -915,7 +914,7 @@ fn dlg_paste_special(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     ui.label(crate::lang::tr("As:"));
     for (id, label) in OPTS {
         let ok = has_shapes || matches!(id, "destinationTheme" | "text");
-        ui.add_enabled_ui(ok, |ui| ui.radio_value(&mut cur, id.to_string(), crate::lang::tr(&label)));
+        ui.add_enabled_ui(ok, |ui| ui.radio_value(&mut cur, id.to_string(), crate::lang::tr(label)));
     }
     d.fields.insert("as".into(), cur.clone());
     let (ok, cancel) = buttons(ui, "OK");
@@ -1260,7 +1259,7 @@ fn dlg_smartart(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             ("pyramid", "Pyramid"),
             ("matrix", "Matrix"),
         ] {
-            if ui.selectable_label(kind == k, crate::lang::tr(&l)).clicked() {
+            if ui.selectable_label(kind == k, crate::lang::tr(l)).clicked() {
                 d.fields.insert("kind".into(), k.into());
             }
         }
@@ -1280,7 +1279,7 @@ fn dlg_about(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     let tab = d.get("tab", "about");
     ui.horizontal(|ui| {
         for (k, l) in [("about", "About"), ("contributors", "Contributors"), ("models", "Models")] {
-            if ui.selectable_label(tab == k, crate::lang::tr(&l)).clicked() {
+            if ui.selectable_label(tab == k, crate::lang::tr(l)).clicked() {
                 d.fields.insert("tab".into(), k.into());
             }
         }
@@ -1328,8 +1327,8 @@ fn dlg_autocorrect(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     egui::ScrollArea::vertical().max_height(220.0).show(ui, |ui| {
         egui::Grid::new("ac-list").striped(true).show(ui, |ui| {
             for (k, v) in entries.iter().filter(|(k, _)| q.is_empty() || k.to_lowercase().starts_with(&q)) {
-                ui.label(crate::lang::tr(&k));
-                ui.label(crate::lang::tr(&v));
+                ui.label(crate::lang::tr(k));
+                ui.label(crate::lang::tr(v));
                 if ui.small_button(crate::lang::tr("Delete")).clicked() {
                     run(app, "text.autocorrect", json!({"remove": k}));
                 }

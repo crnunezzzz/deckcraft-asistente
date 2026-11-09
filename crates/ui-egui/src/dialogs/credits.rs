@@ -217,13 +217,13 @@ pub fn contributors_ui(ui: &mut egui::Ui) {
     ui.horizontal_wrapped(|ui| {
         ui.label(crate::lang::tr("Show"));
         for m in NameMode::ALL {
-            if ui.selectable_label(v.names == m, crate::lang::tr(&m.label())).clicked() {
+            if ui.selectable_label(v.names == m, crate::lang::tr(m.label())).clicked() {
                 v.names = m;
             }
         }
         ui.separator();
         let field = ui.label(crate::lang::tr("Sort"));
-        let combo = craft_ui::ComboBox::from_id_salt("credits_sort").selected_text(crate::lang::tr(&(v.key.label().0))).show_ui(ui, |ui| {
+        let combo = craft_ui::ComboBox::from_id_salt("credits_sort").selected_text(crate::lang::tr(v.key.label().0)).show_ui(ui, |ui| {
             for k in SortKey::ALL {
                 if ui.selectable_label(v.key == k, k.label().0).clicked() {
                     v.key = k;
@@ -438,14 +438,14 @@ pub fn models_ui(ui: &mut egui::Ui) {
     let widths: Vec<f32> = titles
         .iter()
         .enumerate()
-        .map(|(i, title)| natural(ui, RichText::new(crate::lang::tr(*title)).strong(), rows.iter().filter_map(|r| r.get(i).cloned())))
+        .map(|(i, title)| natural(ui, RichText::new(crate::lang::tr(title)).strong(), rows.iter().filter_map(|r| r.get(i).cloned())))
         .collect();
     egui::ScrollArea::horizontal().id_salt("credits_models").auto_shrink([false, false]).show(ui, |ui| {
         fitted_table(ui, "credits_models", &widths, &MODEL_GROW)
             .header(h + 4.0, |mut header| {
                 for (title, r) in titles.into_iter().zip(right) {
                     header.col(|ui| {
-                        aligned(ui, r, |ui| ui.label(RichText::new(crate::lang::tr(&title)).strong()));
+                        aligned(ui, r, |ui| ui.label(RichText::new(crate::lang::tr(title)).strong()));
                     });
                 }
             })

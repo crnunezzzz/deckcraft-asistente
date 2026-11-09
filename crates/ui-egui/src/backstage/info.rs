@@ -84,7 +84,7 @@ pub(super) fn info(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
             let size = v.get("bytes").and_then(Value::as_u64).map(format_bytes);
             egui::Grid::new("backstage_props").num_columns(2).spacing(vec2(18.0, 7.0)).show(ui, |ui| {
                 let row = |ui: &mut Ui, k: &str, val: String| {
-                    ui.label(RichText::new(crate::lang::tr(&k)).color(t.text_dim));
+                    ui.label(RichText::new(crate::lang::tr(k)).color(t.text_dim));
                     ui.label(crate::lang::tr(&val));
                     ui.end_row();
                 };
@@ -96,7 +96,7 @@ pub(super) fn info(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
                 for (i, (key, label, hint)) in PROPERTIES.iter().enumerate() {
                     let saved = props.get(*key).and_then(Value::as_str).unwrap_or("").to_string();
                     let Some(draft) = bs.props.get_mut(i) else { continue };
-                    let l = ui.label(RichText::new(crate::lang::tr(*label)).color(t.text_dim));
+                    let l = ui.label(RichText::new(crate::lang::tr(label)).color(t.text_dim));
                     let id = ui.make_persistent_id(("backstage_prop", *key));
                     let resp = ui.add(egui::TextEdit::singleline(draft).id(id).hint_text(*hint).desired_width(300.0)).labelled_by(l.id);
                     if resp.lost_focus() && *draft != saved {
@@ -156,10 +156,10 @@ pub(super) fn save_as(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage, out: 
     ui.horizontal(|ui| {
         craft_ui::ComboBox::from_id_salt("backstage_save_type")
             .width(340.0)
-            .selected_text(crate::lang::tr(&current))
+            .selected_text(crate::lang::tr(current))
             .show_ui(ui, |ui| {
                 for (id, label, _) in SAVE_TYPES {
-                    if ui.selectable_label(bs.file_type == id, crate::lang::tr(&label)).clicked() {
+                    if ui.selectable_label(bs.file_type == id, crate::lang::tr(label)).clicked() {
                         bs.file_type = id;
                     }
                 }
@@ -169,7 +169,7 @@ pub(super) fn save_as(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage, out: 
         // A page that keeps the files (`host_save`) saves; plain web downloads.
         let web = app.services.pick_save.is_none() && app.services.host_save.is_none();
         let label = if web { "Download" } else { "Save" };
-        let save = ui.add(egui::Button::new(RichText::new(crate::lang::tr(&label)).color(t.accent_text)).fill(t.accent).min_size(vec2(84.0, 26.0)));
+        let save = ui.add(egui::Button::new(RichText::new(crate::lang::tr(label)).color(t.accent_text)).fill(t.accent).min_size(vec2(84.0, 26.0)));
         if save
             .on_hover_text(if web {
                 "Download the file"
@@ -235,10 +235,10 @@ pub(super) fn about(app: &mut SlideApp, ui: &mut Ui) {
             let dark = app.ui.brightness == theme::Brightness::Dark;
             craft_ui::ComboBox::from_id_salt("backstage_appearance")
                 .width(260.0)
-                .selected_text(crate::lang::tr(&(if dark { "Dark" } else { "Light" })))
+                .selected_text(crate::lang::tr(if dark { "Dark" } else { "Light" }))
                 .show_ui(ui, |ui| {
                     for (on, label) in [(false, "Light"), (true, "Dark")] {
-                        if ui.selectable_label(dark == on, crate::lang::tr(&label)).clicked() {
+                        if ui.selectable_label(dark == on, crate::lang::tr(label)).clicked() {
                             let _ = app.run("view.dark", json!({"on": on}));
                         }
                     }

@@ -41,7 +41,7 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
         let more = widgets::drop_button(ui, "", vec2(14.0, 52.0), true);
         egui::Popup::menu(&more).width(480.0).show(|ui| {
             for cat in ["Subtle", "Exciting", "Dynamic Content"] {
-                ui.label(egui::RichText::new(crate::lang::tr(&cat)).font(theme::bold(12.0)));
+                ui.label(egui::RichText::new(crate::lang::tr(cat)).font(theme::bold(12.0)));
                 ui.horizontal_wrapped(|ui| {
                     for x in list.iter().filter(|x| x.2 == cat) {
                         let (r, resp) = ui.allocate_exact_size(vec2(56.0, 58.0), Sense::click());
@@ -93,7 +93,7 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
                         }
                         ui.separator();
                         for (id, label) in deckcraft_engine::sounds::BUILTIN {
-                            if ui.button(crate::lang::tr(&label)).clicked() {
+                            if ui.button(crate::lang::tr(label)).clicked() {
                                 let lp = cur.as_ref().is_some_and(|t| t.sound_loop);
                                 run(app, "transition.sound", json!({"builtin": id, "loop": lp}));
                             }
