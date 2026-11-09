@@ -1,8 +1,6 @@
 # Hardware parity with PowerPoint
 
-> Android update · 2026-10-18: Android.4 adds explicit IME/hardware-key input, the original launcher icon, and a native Asistente tab with in-panel API settings. Device validation remains pending; see [Android notes](android.md).
-
-> **Last reviewed:** 2026-10-14 · **Last updated:** 2026-10-18 · **Change:** minor (community PR wave 2026-10-14: picture export DPI, Retina pixel grid (#184), twist to rotate, swipe to turn the page, pen pressure; duplicated rows and headers folded; previous: minor, IME input, #101) · **Target:** Microsoft PowerPoint for Mac 16.113 (Microsoft 365); PowerPoint for Windows where noted
+> **Last reviewed:** 2026-10-14 · **Last updated:** 2026-11-02 · **Change:** minor (Presenter View only with a second display on Linux and the BSDs, #1156; previous: minor, community PR wave 2026-10-14: picture export DPI, Retina pixel grid (#184), twist to rotate, swipe to turn the page, pen pressure; duplicated rows and headers folded; previous: minor, IME input, #101) · **Target:** Microsoft PowerPoint for Mac 16.113 (Microsoft 365); PowerPoint for Windows where noted
 
 What hardware PowerPoint uses and what DeckCraft uses, per platform. Dimension score: **~40%
 ready** (estimated), **25–45 h** to parity. Performance (unmeasured, ~55%) is tracked here too
@@ -36,7 +34,7 @@ because it mostly follows from hardware use.
 
 | Feature | PowerPoint | DeckCraft |
 |---|---|---|
-| Detect the projector, show on it, presenter view on the laptop | yes | **no**: the show goes full screen on the current display; presenter view opens as a normal window (egui viewport) |
+| Detect the projector, show on it, presenter view on the laptop | yes | **no**: the show goes full screen on the current display; presenter view opens as a normal window (egui viewport). On Linux and the BSDs, when winit lists exactly one display, the show opens without Presenter View, as in PowerPoint; if it lists none, the setting is kept (#1156) |
 | Swap displays, choose the monitor in Set Up Show | yes | no |
 | Mirroring-aware behaviour | yes | no |
 
@@ -75,6 +73,7 @@ alignment runs once per transition (#67), and the decoders run in software.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-02 | minor | On Linux and the BSDs, Presenter View stays off when winit lists exactly one display: the presenter window covered the show and stalled it. If winit lists none, the setting is kept (#1156) |
 | 2026-10-14 | minor | PNG and JPEG slide export record 144 dpi at the default 2 pixels per point, so a Retina picture opens at the slide's size |
 | 2026-10-13 | trivial | Editor slide rasters sit on the physical pixel grid (#184) |
 | 2026-10-14 | trivial | Community PR wave folded: one row each for pinch/two-finger gestures and pen pressure |
@@ -83,7 +82,3 @@ alignment runs once per transition (#67), and the decoders run in software.
 | 2026-10-14 | minor | Pen pressure scales ink width; tilt, pinch zoom and trackpad gestures remain (estimate 3–6 h → 2–5 h) |
 | 2026-10-12 | minor | IME input methods (#101) |
 | 2026-10-10 | major | Created: rendering, media, displays, input and performance against PowerPoint 16.113 |
-
-### 2026-10-18 — Android integration
-
-An initial ARM64 GameActivity host now reuses the engine and egui editor, with system font discovery under Android font directories. This adds build and platform integration, not a measured device-parity score. Touch, IME, mouse/keyboard, lifecycle and external-display validation remain open; see [Android](android.md).
