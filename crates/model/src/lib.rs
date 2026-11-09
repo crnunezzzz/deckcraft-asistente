@@ -11,6 +11,7 @@ pub mod anim;
 pub mod bidi;
 pub mod chart;
 pub mod defaults;
+pub mod display_text;
 pub mod edit;
 pub mod numfmt;
 pub mod resolve;

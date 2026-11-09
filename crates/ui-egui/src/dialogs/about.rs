@@ -20,19 +20,23 @@ pub fn about(_app: &mut SlideApp, ui: &mut Ui) {
     ui.vertical_centered(|ui| {
         let (r, _) = ui.allocate_exact_size(vec2(64.0, 64.0), Sense::hover());
         paint_logo(ui.painter(), r);
-        ui.label(egui::RichText::new("DeckCraft").font(theme::bold(22.0)));
-        ui.label(egui::RichText::new(version_line()).color(t.text_dim));
+        ui.label(egui::RichText::new(crate::lang::tr("DeckCraft")).font(theme::bold(22.0)));
+        ui.label(egui::RichText::new(crate::lang::tr(&version_line())).color(t.text_dim));
         ui.add_space(6.0);
-        ui.label("Presentations and slide shows, rebuilt from scratch in pure Rust.");
-        ui.label("An open-source, clean-room project. Not affiliated with Microsoft.");
+        ui.label(crate::lang::tr("Presentations and slide shows, rebuilt from scratch in pure Rust."));
+        ui.label(crate::lang::tr("An open-source, clean-room project. Not affiliated with Microsoft."));
         // IA fork: a modified version says it is based on the original, never that it is one.
-        ui.label("Versión modificada con asistente de IA, basada en DeckCraft del equipo de ArtCraft.");
-        ui.label("No es un producto oficial de ArtCraft.");
+        ui.label(crate::lang::tr("Versión modificada con asistente de IA, basada en DeckCraft del equipo de ArtCraft."));
+        ui.label(crate::lang::tr("No es un producto oficial de ArtCraft."));
         ui.add_space(6.0);
         ui.hyperlink_to("Esta versión: github.com/crnunezzzz/deckcraft-asistente", "https://github.com/crnunezzzz/deckcraft-asistente");
         ui.hyperlink_to("Original: github.com/storytold/deckcraft", deckcraft_engine::links::GITHUB);
         ui.add_space(6.0);
-        ui.label(egui::RichText::new("MIT OR Apache-2.0 · © 2026 ArtCraft Team and the DeckCraft contributors").size(11.0).color(t.text_faint));
+        ui.label(
+            egui::RichText::new(crate::lang::tr("MIT OR Apache-2.0 · © 2026 ArtCraft Team and the DeckCraft contributors"))
+                .size(11.0)
+                .color(t.text_faint),
+        );
     });
 }
 
@@ -111,7 +115,7 @@ mod about_credits_tests {
             let mut block = egui::Rect::NOTHING;
             let mut whole = egui::Rect::NOTHING;
             let mut out = ctx.run_ui(egui::RawInput::default(), |ui| {
-                tabs = ui.label("About").rect;
+                tabs = ui.label(crate::lang::tr("About")).rect;
                 block = credits_block(ui, models);
                 whole = ui.min_rect();
             });

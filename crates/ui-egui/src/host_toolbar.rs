@@ -108,7 +108,7 @@ fn pin_button(ui: &mut egui::Ui, collapsed: &mut bool, area: egui::Rect, left: b
         painter.line_segment([pos2(c.x - 5.0, c.y + 2.5), pos2(c.x, c.y - 2.5)], stroke);
         painter.line_segment([pos2(c.x, c.y - 2.5), pos2(c.x + 5.0, c.y + 2.5)], stroke);
     }
-    let response = response.on_hover_text(&label);
+    let response = response.on_hover_text(crate::lang::tr(&label));
     if response.clicked() {
         if peek.is_some() {
             // Pinned: the ribbon stays, the look is over.
