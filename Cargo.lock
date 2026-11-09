@@ -173,7 +173,6 @@ dependencies = [
  "ndk-context",
  "ndk-sys",
  "num_enum",
- "simd_cesu8",
  "thiserror 2.0.21",
 ]
 
@@ -541,12 +540,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "byteorder"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
-
-[[package]]
 name = "byteorder-lite"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -854,12 +847,12 @@ dependencies = [
 [[package]]
 name = "craft-fonts-build"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 
 [[package]]
 name = "craft-i18n"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 dependencies = [
  "fixed_decimal",
  "icu_decimal",
@@ -882,7 +875,7 @@ dependencies = [
 [[package]]
 name = "craft-media"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 dependencies = [
  "thiserror 2.0.21",
 ]
@@ -890,7 +883,7 @@ dependencies = [
 [[package]]
 name = "craft-pdf"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 dependencies = [
  "krilla",
  "thiserror 2.0.21",
@@ -899,7 +892,7 @@ dependencies = [
 [[package]]
 name = "craft-ui"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 dependencies = [
  "craft-fonts-build",
  "craft-i18n",
@@ -919,7 +912,7 @@ dependencies = [
 [[package]]
 name = "craft-update"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 dependencies = [
  "chrono",
  "dunce",
@@ -943,9 +936,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "craft-web-api"
+version = "0.1.0"
+source = "git+https://github.com/storytold/craft-libs?rev=fd5e2feff6ea25bed371a99cc732b3968d621505#fd5e2feff6ea25bed371a99cc732b3968d621505"
+dependencies = [
+ "js-sys",
+ "serde_json",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+]
+
+[[package]]
 name = "craft-web-host"
 version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=2e2312ddaf21bc3d85cd3395d0955c7d239306f6#2e2312ddaf21bc3d85cd3395d0955c7d239306f6"
+source = "git+https://github.com/storytold/craft-libs?rev=fd5e2feff6ea25bed371a99cc732b3968d621505#fd5e2feff6ea25bed371a99cc732b3968d621505"
 dependencies = [
  "wasm-bindgen",
  "web-sys",
@@ -1024,13 +1028,12 @@ checksum = "0c87e182de0887fd5361989c677c4e8f5000cd9491d6d563161a8f3a5519fc7f"
 
 [[package]]
 name = "deckcraft"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "arboard",
  "chrono",
  "cpal",
  "craft-update",
- "deckcraft-assistant",
  "deckcraft-engine",
  "deckcraft-media",
  "deckcraft-ui-egui",
@@ -1046,30 +1049,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "deckcraft-android"
-version = "0.16.0"
-dependencies = [
- "android-activity",
- "cpal",
- "deckcraft-assistant",
- "deckcraft-engine",
- "deckcraft-media",
- "deckcraft-ui-egui",
- "eframe",
- "egui",
- "image",
- "jni 0.22.4",
- "log",
- "quick-xml 0.41.0",
- "serde",
- "serde_json",
- "zeroize",
- "zip 3.0.0",
-]
-
-[[package]]
 name = "deckcraft-anim"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-geom",
  "deckcraft-model",
@@ -1077,32 +1058,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "deckcraft-assistant"
-version = "0.16.0"
-dependencies = [
- "arboard",
- "craft-ui",
- "deckcraft-engine",
- "deckcraft-ui-egui",
- "egui",
- "egui_kittest",
- "getrandom 0.3.4",
- "image",
- "keyring",
- "open",
- "pollster 0.4.0",
- "quick-xml 0.41.0",
- "rfd",
- "serde",
- "serde_json",
- "ureq",
- "zeroize",
- "zip 3.0.0",
-]
-
-[[package]]
 name = "deckcraft-av1"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-bitstream",
  "rayon",
@@ -1111,14 +1068,14 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-bitstream"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "craft-media",
 ]
 
 [[package]]
 name = "deckcraft-cli"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-engine",
  "deckcraft-mcp",
@@ -1128,14 +1085,14 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-color"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "deckcraft-engine"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "chrono",
  "deckcraft-anim",
@@ -1161,7 +1118,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-fonts"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "epaint_default_fonts",
  "harfrust 0.13.3",
@@ -1173,7 +1130,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-format"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-model",
  "serde",
@@ -1184,7 +1141,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-geom"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "kurbo",
  "serde",
@@ -1192,7 +1149,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-h264"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-bitstream",
  "rayon",
@@ -1201,7 +1158,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-hevc"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-bitstream",
  "rayon",
@@ -1210,21 +1167,21 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-isobmff"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "craft-media",
 ]
 
 [[package]]
 name = "deckcraft-matroska"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "craft-media",
 ]
 
 [[package]]
 name = "deckcraft-mcp"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-engine",
  "deckcraft-render",
@@ -1234,7 +1191,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-media"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-av1",
  "deckcraft-h264",
@@ -1252,7 +1209,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-metafile"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "image",
  "kurbo",
@@ -1261,7 +1218,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-model"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-color",
  "deckcraft-geom",
@@ -1273,15 +1230,15 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-ogg"
-version = "0.16.0"
+version = "0.17.0"
 
 [[package]]
 name = "deckcraft-opus"
-version = "0.16.0"
+version = "0.17.0"
 
 [[package]]
 name = "deckcraft-pdf"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "craft-pdf",
  "deckcraft-fonts",
@@ -1299,7 +1256,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-pptx"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-color",
  "deckcraft-engine",
@@ -1315,7 +1272,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-render"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-anim",
  "deckcraft-color",
@@ -1334,7 +1291,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-text"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "chrono",
  "deckcraft-color",
@@ -1348,7 +1305,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-ui-egui"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "craft-ui",
  "craft-update",
@@ -1374,7 +1331,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-vp9"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "deckcraft-bitstream",
  "rayon",
@@ -1383,8 +1340,9 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-web"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
+ "craft-web-api",
  "craft-web-host",
  "deckcraft-engine",
  "deckcraft-ui-egui",
@@ -2804,20 +2762,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "keyring"
-version = "3.6.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eebcc3aff044e5944a8fbaf69eb277d11986064cba30c468730e8b9909fb551c"
-dependencies = [
- "byteorder",
- "log",
- "security-framework 2.11.1",
- "security-framework 3.7.0",
- "windows-sys 0.60.2",
- "zeroize",
-]
-
-[[package]]
 name = "khronos-egl"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2847,7 +2791,7 @@ dependencies = [
 [[package]]
 name = "krilla"
 version = "0.8.2"
-source = "git+https://github.com/storytold/craft-libs?rev=c5a1cbfb5f9049f9270955caffb5bee5997aebf7#c5a1cbfb5f9049f9270955caffb5bee5997aebf7"
+source = "git+https://github.com/storytold/craft-libs?rev=1b34eba41e62138fc2438d2734523b302840b45d#1b34eba41e62138fc2438d2734523b302840b45d"
 dependencies = [
  "base64 0.22.1",
  "bumpalo",
@@ -4208,7 +4152,7 @@ dependencies = [
  "openssl-probe",
  "rustls-pki-types",
  "schannel",
- "security-framework 3.7.0",
+ "security-framework",
 ]
 
 [[package]]
@@ -4235,7 +4179,7 @@ dependencies = [
  "rustls-native-certs",
  "rustls-platform-verifier-android",
  "rustls-webpki",
- "security-framework 3.7.0",
+ "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
  "windows-sys 0.61.2",
@@ -4317,19 +4261,6 @@ name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
-
-[[package]]
-name = "security-framework"
-version = "2.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "897b2245f0b511c87893af39b033e5ca9cce68824c4d7e7630b5a1d339658d02"
-dependencies = [
- "bitflags 2.13.2",
- "core-foundation 0.9.4",
- "core-foundation-sys",
- "libc",
- "security-framework-sys",
-]
 
 [[package]]
 name = "security-framework"
@@ -5277,7 +5208,6 @@ dependencies = [
  "rustls-platform-verifier",
  "ureq-proto",
  "utf8-zero",
- "webpki-roots",
 ]
 
 [[package]]
@@ -5683,15 +5613,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "webpki-roots"
-version = "1.0.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5f280bbb2b287bc8e7de7e3852945a0ff50d1bbcb5ed42b6c7a568c546df171"
-dependencies = [
- "rustls-pki-types",
-]
-
-[[package]]
 name = "weezl"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6059,15 +5980,6 @@ dependencies = [
 
 [[package]]
 name = "windows-sys"
-version = "0.60.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2f500e4d28234f72040990ec9d39e3a6b950f9f22d3dba18416c35882612bcb"
-dependencies = [
- "windows-targets 0.53.5",
-]
-
-[[package]]
-name = "windows-sys"
 version = "0.61.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc"
@@ -6099,28 +6011,11 @@ dependencies = [
  "windows_aarch64_gnullvm 0.52.6",
  "windows_aarch64_msvc 0.52.6",
  "windows_i686_gnu 0.52.6",
- "windows_i686_gnullvm 0.52.6",
+ "windows_i686_gnullvm",
  "windows_i686_msvc 0.52.6",
  "windows_x86_64_gnu 0.52.6",
  "windows_x86_64_gnullvm 0.52.6",
  "windows_x86_64_msvc 0.52.6",
-]
-
-[[package]]
-name = "windows-targets"
-version = "0.53.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4945f9f551b88e0d65f3db0bc25c33b8acea4d9e41163edf90dcd0b19f9069f3"
-dependencies = [
- "windows-link",
- "windows_aarch64_gnullvm 0.53.1",
- "windows_aarch64_msvc 0.53.1",
- "windows_i686_gnu 0.53.1",
- "windows_i686_gnullvm 0.53.1",
- "windows_i686_msvc 0.53.1",
- "windows_x86_64_gnu 0.53.1",
- "windows_x86_64_gnullvm 0.53.1",
- "windows_x86_64_msvc 0.53.1",
 ]
 
 [[package]]
@@ -6145,12 +6040,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a4622180e7a0ec044bb555404c800bc9fd9ec262ec147edd5989ccd0c02cd3"
 
 [[package]]
-name = "windows_aarch64_gnullvm"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9d8416fa8b42f5c947f8482c43e7d89e73a173cead56d044f6a56104a6d1b53"
-
-[[package]]
 name = "windows_aarch64_msvc"
 version = "0.42.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6161,12 +6050,6 @@ name = "windows_aarch64_msvc"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "09ec2a7bb152e2252b53fa7803150007879548bc709c039df7627cabbd05d469"
-
-[[package]]
-name = "windows_aarch64_msvc"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9d782e804c2f632e395708e99a94275910eb9100b2114651e04744e9b125006"
 
 [[package]]
 name = "windows_i686_gnu"
@@ -6181,22 +6064,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e9b5ad5ab802e97eb8e295ac6720e509ee4c243f69d781394014ebfe8bbfa0b"
 
 [[package]]
-name = "windows_i686_gnu"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "960e6da069d81e09becb0ca57a65220ddff016ff2d6af6a223cf372a506593a3"
-
-[[package]]
 name = "windows_i686_gnullvm"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0eee52d38c090b3caa76c563b86c3a4bd71ef1a819287c19d586d7334ae8ed66"
-
-[[package]]
-name = "windows_i686_gnullvm"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa7359d10048f68ab8b09fa71c3daccfb0e9b559aed648a8f95469c27057180c"
 
 [[package]]
 name = "windows_i686_msvc"
@@ -6211,12 +6082,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "240948bc05c5e7c6dabba28bf89d89ffce3e303022809e73deaefe4f6ec56c66"
 
 [[package]]
-name = "windows_i686_msvc"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e7ac75179f18232fe9c285163565a57ef8d3c89254a30685b57d83a38d326c2"
-
-[[package]]
 name = "windows_x86_64_gnu"
 version = "0.42.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6227,12 +6092,6 @@ name = "windows_x86_64_gnu"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "147a5c80aabfbf0c7d901cb5895d1de30ef2907eb21fbbab29ca94c5b08b1a78"
-
-[[package]]
-name = "windows_x86_64_gnu"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c3842cdd74a865a8066ab39c8a7a473c0778a3f29370b5fd6b4b9aa7df4a499"
 
 [[package]]
 name = "windows_x86_64_gnullvm"
@@ -6247,12 +6106,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "24d5b23dc417412679681396f2b49f3de8c1473deb516bd34410872eff51ed0d"
 
 [[package]]
-name = "windows_x86_64_gnullvm"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ffa179e2d07eee8ad8f57493436566c7cc30ac536a3379fdf008f47f6bb7ae1"
-
-[[package]]
 name = "windows_x86_64_msvc"
 version = "0.42.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6263,12 +6116,6 @@ name = "windows_x86_64_msvc"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
-
-[[package]]
-name = "windows_x86_64_msvc"
-version = "0.53.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6bbff5f0aada427a1e5a6da5f1f98158182f26556f345ac9e04d36d0ebed650"
 
 [[package]]
 name = "winit"
@@ -6478,7 +6325,7 @@ checksum = "9440ea3e5aeabb0ac63af70daf835274065238cdd0cec83418f417eae38bacee"
 
 [[package]]
 name = "xtask"
-version = "0.16.0"
+version = "0.17.0"
 dependencies = [
  "serde_json",
 ]
@@ -6658,20 +6505,6 @@ name = "zeroize"
 version = "1.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e13084392c5e4bc371903e2935a5eaeed24905a7511356b883835e18a78f6879"
-dependencies = [
- "zeroize_derive",
-]
-
-[[package]]
-name = "zeroize_derive"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3c50655cbb0fe3fc43170059e702f1ce5e19b84cec58dc87b037a09935c2f328"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.119",
-]
 
 [[package]]
 name = "zerotrie"
@@ -6738,7 +6571,6 @@ dependencies = [
  "nix",
  "typed-path",
  "windows-sys 0.61.2",
- "zopfli",
 ]
 
 [[package]]
