@@ -142,7 +142,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
                 ui.painter().rect_filled(r.shrink2(vec2(2.0, 2.0)), CornerRadius::same(4), t.hover);
             }
             ui.painter().text(r.center(), Align2::CENTER_CENTER, crate::lang::tr("File"), theme::font(13.0), t.text);
-            if resp.on_hover_text("File (Alt+F)").clicked() {
+            if resp.on_hover_text(crate::lang::tr("File (Alt+F)")).clicked() {
                 app.open_backstage(crate::backstage::Page::Home);
             }
             x += w + 2.0;
@@ -316,7 +316,7 @@ fn big(app: &mut SlideApp, ui: &mut Ui, icon: Icon, label: &str, id: &str, p: Va
         let name = label.replace('\n', " ");
         r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, en, &name));
     }
-    let r = r.on_hover_text(tip(id, label));
+    let r = r.on_hover_text(crate::lang::tr(&tip(id, label)));
     if r.clicked() {
         run(app, id, p.clone());
     }
@@ -325,7 +325,7 @@ fn big(app: &mut SlideApp, ui: &mut Ui, icon: Icon, label: &str, id: &str, p: Va
 
 fn small(app: &mut SlideApp, ui: &mut Ui, icon: Icon, label: &str, id: &str, p: Value) {
     let en = enabled(app, id);
-    let r = small_button(ui, icon, label, en, false).on_hover_text(tip(id, label));
+    let r = small_button(ui, icon, label, en, false).on_hover_text(crate::lang::tr(&tip(id, label)));
     if r.clicked() {
         run(app, id, p.clone());
     }
@@ -340,6 +340,7 @@ fn toggle(app: &mut SlideApp, ui: &mut Ui, icon: Icon, label: &str, id: &str, on
 }
 
 fn tip(id: &str, label: &str) -> String {
+    let label = crate::lang::tr(label);
     let sc = deckcraft_engine::find_command(id).and_then(|c| c.shortcut).or_else(|| crate::UI_COMMANDS.iter().find(|c| c.0 == id).and_then(|c| c.2));
     match sc {
         Some(s) => format!("{label} ({})", pretty_shortcut(s)),

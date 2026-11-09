@@ -354,7 +354,7 @@ pub fn dropdown(ui: &mut Ui, label: &str, current: &str, width: f32, enabled: bo
     painter.with_clip_rect(Rect::from_min_max(clip.min, pos2(clip.max.x - 12.0, clip.max.y))).text(
         pos2(rect.min.x + 6.0, rect.center().y),
         Align2::LEFT_CENTER,
-        current,
+        crate::lang::tr(current),
         theme::font(12.0),
         if enabled { t.text } else { t.text_faint },
     );
@@ -395,7 +395,7 @@ pub fn color_grid(ui: &mut Ui, scheme: &ColorScheme, none_label: Option<&str>) -
     let t = Tokens::get(ui.ctx());
     let mut out = None;
     ui.set_min_width(220.0);
-    ui.label(egui::RichText::new("Theme Colors").font(theme::bold(12.0)));
+    ui.label(egui::RichText::new(crate::lang::tr("Theme Colors")).font(theme::bold(12.0)));
     let slots = [
         SchemeSlot::Lt1,
         SchemeSlot::Dk1,
@@ -418,7 +418,7 @@ pub fn color_grid(ui: &mut Ui, scheme: &ColorScheme, none_label: Option<&str>) -
             Stroke::new(if resp.hovered() { 2.0 } else { 1.0 }, if resp.hovered() { t.accent } else { t.border }),
             egui::StrokeKind::Inside,
         );
-        resp.on_hover_text(tip).clicked()
+        resp.on_hover_text(crate::lang::tr(&tip)).clicked()
     };
     egui::Grid::new("theme_colors").spacing(vec2(3.0, 1.0)).show(ui, |ui| {
         for slot in slots {
@@ -457,7 +457,7 @@ pub fn color_grid(ui: &mut Ui, scheme: &ColorScheme, none_label: Option<&str>) -
         }
     });
     ui.add_space(4.0);
-    ui.label(egui::RichText::new("Standard Colors").font(theme::bold(12.0)));
+    ui.label(egui::RichText::new(crate::lang::tr("Standard Colors")).font(theme::bold(12.0)));
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing.x = 3.0;
         for (c, name) in deckcraft_color::STANDARD_COLORS {
@@ -468,7 +468,7 @@ pub fn color_grid(ui: &mut Ui, scheme: &ColorScheme, none_label: Option<&str>) -
     });
     ui.separator();
     if let Some(n) = none_label
-        && ui.button(n).clicked()
+        && ui.button(crate::lang::tr(&n)).clicked()
     {
         out = Some(None);
     }
@@ -476,8 +476,8 @@ pub fn color_grid(ui: &mut Ui, scheme: &ColorScheme, none_label: Option<&str>) -
     let id = ui.scope_id().with("hex");
     let mut hex: String = ui.data_mut(|d| d.get_temp::<String>(id).unwrap_or_default());
     ui.horizontal(|ui| {
-        ui.label("More Colors… #");
-        let r = ui.add(egui::TextEdit::singleline(&mut hex).desired_width(70.0).hint_text("RRGGBB"));
+        ui.label(crate::lang::tr("More Colors… #"));
+        let r = ui.add(egui::TextEdit::singleline(&mut hex).desired_width(70.0).hint_text(crate::lang::tr("RRGGBB")));
         if r.lost_focus()
             && ui.input(|i| i.key_pressed(egui::Key::Enter))
             && let Some(c) = Rgba::from_hex(&hex)
@@ -486,7 +486,7 @@ pub fn color_grid(ui: &mut Ui, scheme: &ColorScheme, none_label: Option<&str>) -
         }
     });
     ui.data_mut(|d| d.insert_temp(id, hex));
-    if ui.button("Eyedropper").on_hover_text("Click the slide to take the colour under the pointer").clicked() {
+    if ui.button(crate::lang::tr("Eyedropper")).on_hover_text(crate::lang::tr("Click the slide to take the colour under the pointer")).clicked() {
         crate::eyedropper::request(ui.ctx());
         ui.close();
     }
@@ -518,7 +518,7 @@ pub fn gallery(
         if sel {
             painter.rect_stroke(rect.expand(1.0), CornerRadius::same(4), Stroke::new(1.5, t.accent), egui::StrokeKind::Inside);
         }
-        if resp.on_hover_text(tip(i)).clicked() {
+        if resp.on_hover_text(crate::lang::tr(&tip(i))).clicked() {
             clicked = Some(i);
         }
     }

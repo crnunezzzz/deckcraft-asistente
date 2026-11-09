@@ -7,6 +7,8 @@
 //! The choice lives in `language.json` beside `ui.json` ([`load`], [`save`]); with no saved
 //! choice the system language decides (`LC_ALL`, `LC_MESSAGES`, `LANG`).
 
+mod es_more;
+
 use std::collections::HashMap;
 use std::path::Path;
 use std::sync::OnceLock;
@@ -58,6 +60,12 @@ pub fn current() -> Language {
 /// Switch the interface language (takes effect on the next frame).
 pub fn set(lang: Language) {
     CURRENT.store(if lang == Language::Es { 1 } else { 0 }, Ordering::Relaxed);
+    // The renderer's own words (placeholder prompts) follow the interface too.
+    deckcraft_model::display_text::set(tr_static);
+}
+
+fn tr_static(text: &'static str) -> &'static str {
+    tr(text)
 }
 
 /// The system's interface language, when it is one we have.
@@ -110,6 +118,32 @@ pub fn picker(ui: &mut egui::Ui) {
     });
 }
 
+/// A gallery tile's name centred on `at` within `width`: one line when it fits at `size`, else
+/// two lines split at a space, smaller as needed (down to 7 pt). Spanish names are longer than
+/// English ones ("Desplazar hacia dentro", "Barras aleatorias").
+pub fn paint_tile_label(p: &egui::Painter, at: egui::Pos2, text: &str, size: f32, width: f32, color: egui::Color32) {
+    let wide = |t: &str, s: f32| p.layout_no_wrap(t.to_owned(), crate::theme::font(s), color).size().x;
+    if width <= 0.0 || wide(text, size) <= width {
+        p.text(at, egui::Align2::CENTER_CENTER, text, crate::theme::font(size), color);
+        return;
+    }
+    // The split that leaves the longer line shortest.
+    let split = text
+        .match_indices(' ')
+        .map(|(i, _)| (text.get(..i).unwrap_or_default(), text.get(i + 1..).unwrap_or_default()))
+        .min_by(|a, b| wide(a.0, size).max(wide(a.1, size)).total_cmp(&wide(b.0, size).max(wide(b.1, size))));
+    let Some((first, second)) = split else {
+        let s = (size * width / wide(text, size).max(1.0)).max(7.0);
+        p.text(at, egui::Align2::CENTER_CENTER, text, crate::theme::font(s), color);
+        return;
+    };
+    let longest = wide(first, size).max(wide(second, size)).max(1.0);
+    let s = (size * 0.9).min(size * width / longest).max(7.0);
+    let line = s + 1.0;
+    p.text(at - egui::vec2(0.0, line / 2.0), egui::Align2::CENTER_CENTER, first, crate::theme::font(s), color);
+    p.text(at + egui::vec2(0.0, line / 2.0), egui::Align2::CENTER_CENTER, second, crate::theme::font(s), color);
+}
+
 /// The status bar's slide counter ("Slide 3 of 8").
 pub fn slide_of(n: usize, total: usize) -> String {
     match current() {
@@ -120,7 +154,8 @@ pub fn slide_of(n: usize, total: usize) -> String {
 
 fn spanish() -> &'static HashMap<&'static str, &'static str> {
     static MAP: OnceLock<HashMap<&'static str, &'static str>> = OnceLock::new();
-    MAP.get_or_init(|| ES.iter().copied().collect())
+    // The first catalogue wins where both have a text.
+    MAP.get_or_init(|| es_more::ES.iter().chain(ES).copied().collect())
 }
 
 /// `text` in the interface language: its translation, or `text` itself.
@@ -981,5 +1016,36 @@ mod tests {
             assert!(!en.is_empty() && !es.is_empty(), "{en:?} → {es:?}");
         }
         assert_eq!(spanish().get("Home"), Some(&"Inicio"));
+    }
+
+    #[test]
+    fn second_table_has_no_empty_or_repeated_entries() {
+        let mut seen = std::collections::HashSet::new();
+        for (en, es) in es_more::ES {
+            assert!(!en.is_empty() && !es.is_empty(), "{en:?} → {es:?}");
+            assert!(seen.insert(*en), "{en:?} is listed twice");
+        }
+    }
+
+    /// The ribbon's galleries show these names: each one reads Spanish in the Spanish interface.
+    #[test]
+    fn every_gallery_name_has_a_spanish_name() {
+        let map = spanish();
+        let missing: Vec<&str> = deckcraft_model::anim::TRANSITIONS
+            .iter()
+            .map(|t| t.1)
+            .chain(deckcraft_model::anim::ANIMATIONS.iter().map(|a| a.1))
+            .chain(deckcraft_engine::cmd::smartart::LAYOUTS.iter().map(|l| l.1))
+            .filter(|name| !map.contains_key(name))
+            .collect();
+        assert!(missing.is_empty(), "no Spanish for {missing:?}");
+    }
+
+    #[test]
+    fn placeholder_prompts_have_spanish_names() {
+        use deckcraft_model::PhType;
+        for kind in [PhType::Title, PhType::SubTitle, PhType::Body, PhType::Chart, PhType::Table, PhType::Diagram, PhType::Media, PhType::Picture] {
+            assert!(spanish().contains_key(kind.prompt()), "{:?}", kind.prompt());
+        }
     }
 }

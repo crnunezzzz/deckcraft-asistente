@@ -15,7 +15,7 @@ pub(crate) fn prompt_body(rctx: &Ctx, s: &Shape, kind: PhType) -> TextBody {
     if matches!(rctx.owner, resolve::Owner::Layout | resolve::Owner::Master) {
         return TextBody::default();
     }
-    let txt = kind.prompt();
+    let txt = deckcraft_model::display_text::shown(kind.prompt());
     if txt.is_empty() || kind.is_footer_kind() {
         return TextBody::default();
     }

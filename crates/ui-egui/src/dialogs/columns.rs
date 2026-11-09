@@ -36,7 +36,7 @@ pub(super) fn columns_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) ->
     field(ui, d, "Spacing (in):", "spacing", &spacing);
     if let Some(err) = d.fields.get("error").cloned().filter(|s| !s.is_empty()) {
         ui.add_space(4.0);
-        ui.label(egui::RichText::new(err).color(Color32::from_rgb(0xB0, 0x30, 0x30)));
+        ui.label(egui::RichText::new(crate::lang::tr(&err)).color(Color32::from_rgb(0xB0, 0x30, 0x30)));
     }
     let (ok, cancel) = buttons(ui, "OK");
     if ok {

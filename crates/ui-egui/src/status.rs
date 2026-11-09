@@ -35,7 +35,7 @@ pub fn status_bar(app: &mut SlideApp, ui: &mut Ui) {
         let lr = p.with_clip_rect(lclip).text(pos2(lx, rect.center().y), Align2::LEFT_CENTER, &name, theme::font(12.0), t.text_dim);
         let hit = lr.expand(3.0).intersect(lclip);
         if hit.is_positive() {
-            let resp = ui.interact(hit, ui.scope_id().with("status_lang"), Sense::click()).on_hover_text("Language");
+            let resp = ui.interact(hit, ui.scope_id().with("status_lang"), Sense::click()).on_hover_text(crate::lang::tr("Language"));
             resp.widget_info(|| named_with_value("Language", &name));
             if resp.clicked() {
                 app.dialog = Some(crate::dialogs::Dialog::new("language"));
@@ -119,14 +119,14 @@ pub fn status_bar(app: &mut SlideApp, ui: &mut Ui) {
 fn small_icon(ui: &mut Ui, icon: Icon, tip: &str, on: bool) -> egui::Response {
     let resp = icon_button(ui, icon, on);
     resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, tip));
-    resp.on_hover_text(tip)
+    resp.on_hover_text(crate::lang::tr(&tip))
 }
 
 /// A view button: screen readers hear its name and whether its view is the one shown.
 fn view_icon(ui: &mut Ui, icon: Icon, tip: &str, on: bool) -> egui::Response {
     let resp = icon_button(ui, icon, on);
     resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, on, tip));
-    resp.on_hover_text(tip)
+    resp.on_hover_text(crate::lang::tr(&tip))
 }
 
 fn icon_button(ui: &mut Ui, icon: Icon, on: bool) -> egui::Response {
@@ -216,7 +216,11 @@ pub fn notes_pane(app: &mut SlideApp, ui: &mut Ui) {
                 .auto_shrink([false, false])
                 .show(ui, |ui| {
                     crate::notes::editor(ui, &mut draft, &look, |e| {
-                        e.id(id).hint_text("Click to add notes").frame(egui::Frame::NONE).desired_width(f32::INFINITY).desired_rows(2)
+                        e.id(id)
+                            .hint_text(crate::lang::tr("Click to add notes"))
+                            .frame(egui::Frame::NONE)
+                            .desired_width(f32::INFINITY)
+                            .desired_rows(2)
                     })
                 })
                 .inner;
@@ -267,24 +271,24 @@ pub fn notes_pane(app: &mut SlideApp, ui: &mut Ui) {
                             .collect()
                     };
                     if let Some(from) = w.delete_from {
-                        if ui.button(egui::RichText::new("Delete Repeated Word").strong()).clicked() {
+                        if ui.button(egui::RichText::new(crate::lang::tr("Delete Repeated Word")).strong()).clicked() {
                             changed = Some(splice(ls + from, ""));
                             ui.close();
                         }
                     } else if w.suggestions.is_empty() {
-                        ui.label(egui::RichText::new("(no spelling suggestions)").weak());
+                        ui.label(egui::RichText::new(crate::lang::tr("(no spelling suggestions)")).weak());
                     }
                     for to in &w.suggestions {
-                        if ui.button(egui::RichText::new(to).strong()).clicked() {
+                        if ui.button(egui::RichText::new(crate::lang::tr(&to)).strong()).clicked() {
                             changed = Some(splice(ls + w.start, to));
                             ui.close();
                         }
                     }
-                    if ui.button("Ignore All").clicked() {
+                    if ui.button(crate::lang::tr("Ignore All")).clicked() {
                         app.squiggles.ignore(&w.word);
                         ui.close();
                     }
-                    if w.delete_from.is_none() && ui.button("Add to Dictionary").clicked() {
+                    if w.delete_from.is_none() && ui.button(crate::lang::tr("Add to Dictionary")).clicked() {
                         if let Err(e) = app.session.execute("review.addToDictionary", &json!({"word": w.word})) {
                             app.set_status(e.to_string());
                         }

@@ -85,7 +85,7 @@ fn tile(ui: &mut Ui, label: &str, selected: bool, paint: impl FnOnce(&Painter, R
     paint(&p.with_clip_rect(rect.shrink(1.0)), rect);
     let stroke = if selected { Stroke::new(2.0, t.accent) } else { Stroke::new(1.0, t.border) };
     p.rect_stroke(rect, round, stroke, StrokeKind::Inside);
-    resp.on_hover_text(label)
+    resp.on_hover_text(crate::lang::tr(&label))
 }
 
 /// The sample card every preview draws on, centred in `tile`.

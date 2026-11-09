@@ -5,18 +5,20 @@ use super::{Align2, Color32, CornerRadius, Sense, SlideApp, Stroke, Tokens, Ui, 
 pub(super) fn revisions(app: &mut SlideApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
     let Ok(v) = app.session.execute("review.revisions", &json!({})) else {
-        ui.label(egui::RichText::new("Compare this presentation with a revised copy from Review › Compare.").color(t.text_dim));
+        ui.label(egui::RichText::new(crate::lang::tr("Compare this presentation with a revised copy from Review › Compare.")).color(t.text_dim));
         return;
     };
     let changes = v["changes"].as_array().cloned().unwrap_or_default();
     ui.label(egui::RichText::new(format!("Compared with {}", v["name"].as_str().unwrap_or("?"))).color(t.text_dim));
     if v["byPosition"].as_bool() == Some(true) {
-        ui.label(egui::RichText::new("Not a copy of this presentation: slides are matched by position.").size(11.0).color(t.text_faint));
+        ui.label(
+            egui::RichText::new(crate::lang::tr("Not a copy of this presentation: slides are matched by position.")).size(11.0).color(t.text_faint),
+        );
     }
     ui.add_space(4.0);
     if changes.is_empty() {
-        ui.label("No differences left.");
-        if ui.button("End Review").clicked() {
+        ui.label(crate::lang::tr("No differences left."));
+        if ui.button(crate::lang::tr("End Review")).clicked() {
             run(app, "review.endCompare", json!({}));
             app.ui.pane = None;
         }
@@ -43,15 +45,15 @@ pub(super) fn revisions(app: &mut SlideApp, ui: &mut Ui) {
             ui.horizontal(|ui| {
                 let (r, _) = ui.allocate_exact_size(vec2(4.0, 16.0), Sense::hover());
                 ui.painter().rect_filled(r, CornerRadius::same(2), col);
-                if ui.link(egui::RichText::new(&head).font(theme::bold(12.5))).clicked() {
+                if ui.link(egui::RichText::new(crate::lang::tr(&head)).font(theme::bold(12.5))).clicked() {
                     let max = app.session.active().map(|d| d.doc.slides.len().saturating_sub(1)).unwrap_or(0);
                     run(app, "slide.go", json!({"index": (slide as usize).min(max)}));
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui.small_button("Reject").clicked() {
+                    if ui.small_button(crate::lang::tr("Reject")).clicked() {
                         run(app, "review.reject", json!({"index": i}));
                     }
-                    if ui.small_button("Accept").clicked() {
+                    if ui.small_button(crate::lang::tr("Accept")).clicked() {
                         run(app, "review.accept", json!({"index": i}));
                     }
                 });
@@ -66,7 +68,7 @@ pub(super) fn revisions(app: &mut SlideApp, ui: &mut Ui) {
 
 pub(super) fn comments(app: &mut SlideApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
-    if ui.button("+ New Comment").clicked() {
+    if ui.button(crate::lang::tr("+ New Comment")).clicked() {
         app.dialog = Some(crate::dialogs::Dialog::new("comment"));
     }
     ui.separator();
@@ -76,7 +78,7 @@ pub(super) fn comments(app: &mut SlideApp, ui: &mut Ui) {
         .map(|st| st.doc.slides.iter().enumerate().filter(|(_, sl)| !sl.comments.is_empty()).map(|(i, sl)| (i, sl.comments.clone())).collect())
         .unwrap_or_default();
     if threads.is_empty() {
-        ui.label(egui::RichText::new("No comments.").color(t.text_dim));
+        ui.label(egui::RichText::new(crate::lang::tr("No comments.")).color(t.text_dim));
         return;
     }
     let focus = app.ui.comment_focus;
@@ -111,19 +113,20 @@ fn comment_card(app: &mut SlideApp, ui: &mut Ui, slide: usize, index: usize, c: 
                 ui.painter().circle_filled(r.center(), 12.0, t.accent);
                 ui.painter().text(r.center(), Align2::CENTER_CENTER, &c.initials, theme::bold(11.0), Color32::WHITE);
                 ui.vertical(|ui| {
-                    let name = ui.add(egui::Label::new(egui::RichText::new(&c.author).font(theme::bold(12.5))).sense(Sense::click()));
+                    let name =
+                        ui.add(egui::Label::new(egui::RichText::new(crate::lang::tr(&c.author)).font(theme::bold(12.5))).sense(Sense::click()));
                     if name.clicked() {
                         focus_comment(app, slide, index);
                     }
                     let when = c.date.replace('T', " ").trim_end_matches('Z').to_string();
                     let when = if c.resolved { format!("{when} · Resolved") } else { when };
-                    ui.label(egui::RichText::new(when).size(10.5).color(t.text_faint));
+                    ui.label(egui::RichText::new(crate::lang::tr(&when)).size(10.5).color(t.text_faint));
                 });
             });
             if head.response.clicked() {
                 focus_comment(app, slide, index);
             }
-            let body = ui.add(egui::Label::new(&c.text).sense(Sense::click()));
+            let body = ui.add(egui::Label::new(crate::lang::tr(&c.text)).sense(Sense::click()));
             if body.clicked() {
                 focus_comment(app, slide, index);
             }
@@ -150,7 +153,7 @@ fn comment_card(app: &mut SlideApp, ui: &mut Ui, slide: usize, index: usize, c: 
                     }
                     let id = ui.scope_id().with(("reply", slide, index));
                     let mut txt: String = ui.data_mut(|d| d.get_temp(id).unwrap_or_default());
-                    let r = ui.add(egui::TextEdit::singleline(&mut txt).hint_text("Reply…").desired_width(ui.available_width()));
+                    let r = ui.add(egui::TextEdit::singleline(&mut txt).hint_text(crate::lang::tr("Reply…")).desired_width(ui.available_width()));
                     if r.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) && !txt.trim().is_empty() {
                         focus_comment(app, slide, index);
                         run(app, "comment.reply", json!({"index": index, "text": txt}));

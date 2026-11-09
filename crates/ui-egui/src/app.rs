@@ -127,7 +127,8 @@ impl SlideApp {
     }
 
     pub fn set_status(&mut self, msg: impl Into<String>) {
-        self.status = Some((msg.into(), now_ms()));
+        let msg = msg.into();
+        self.status = Some((crate::lang::tr(&msg).to_string(), now_ms()));
     }
 
     /// Turn on the automatic check for a newer release at start-up (desktop shell only; tests and

@@ -760,7 +760,7 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
         painter.text(
             pos2(bar.min.x + 14.0, bar.center().y),
             Align2::LEFT_CENTER,
-            format!("Slide {} of {}", show.state.slide + 1, doc.slides.len()),
+            crate::lang::slide_of(show.state.slide + 1, doc.slides.len()),
             theme::font(12.0),
             Color32::from_gray(200),
         );
@@ -769,7 +769,7 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
                 .max_rect(Rect::from_min_max(pos2(bar.max.x - 260.0, bar.min.y), bar.max))
                 .layout(egui::Layout::right_to_left(egui::Align::Center)),
         );
-        if child.button("Close").clicked() {
+        if child.button(crate::lang::tr("Close")).clicked() {
             out.keep = false;
         }
         if child.button("▶").clicked() {
@@ -787,7 +787,8 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
         painter.rect_filled(bar, CornerRadius::same(17), Color32::from_black_alpha(140));
         let mut child =
             ui.new_child(egui::UiBuilder::new().max_rect(bar.shrink2(vec2(10.0, 4.0))).layout(egui::Layout::left_to_right(egui::Align::Center)));
-        let b = |ui: &mut Ui, s: &str| ui.add(egui::Button::new(egui::RichText::new(s).color(Color32::WHITE).size(15.0)).frame(false));
+        let b =
+            |ui: &mut Ui, s: &str| ui.add(egui::Button::new(egui::RichText::new(crate::lang::tr(&s)).color(Color32::WHITE).size(15.0)).frame(false));
         if b(&mut child, "◀").clicked() {
             let a = show.state.prev(doc);
             show.apply(a, doc, now);
