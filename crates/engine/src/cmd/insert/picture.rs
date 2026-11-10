@@ -73,6 +73,31 @@ pub fn content_type(name: &str, bytes: &[u8]) -> &'static str {
     }
 }
 
+/// How far each picture lands from the one before it when they would cover each other.
+const CASCADE: f64 = 14.4;
+
+/// `rect` moved down and right until no shape of the slide starts at the same corner: pictures
+/// pasted one after another show as a stack instead of the newest hiding the rest. It stays on
+/// the slide.
+pub(crate) fn cascaded(s: &Session, mut rect: Xfrm) -> Xfrm {
+    let Some(d) = s.active() else { return rect };
+    let size = crate::page_size(d);
+    let taken: Vec<(f64, f64)> = d.shapes().iter().filter_map(|x| x.xfrm.as_ref()).map(|x| (x.x, x.y)).collect();
+    let covered = |r: &Xfrm| taken.iter().any(|(x, y)| (x - r.x).abs() < 0.5 && (y - r.y).abs() < 0.5);
+    // Bounded by the slide: the stack stops growing at its edge.
+    for _ in 0..200 {
+        if !covered(&rect) {
+            break;
+        }
+        let next = Xfrm { x: rect.x + CASCADE, y: rect.y + CASCADE, ..rect };
+        if next.x + next.w > size.width || next.y + next.h > size.height {
+            break;
+        }
+        rect = next;
+    }
+    rect
+}
+
 /// Natural size of an image in points (96 dpi), fitted inside the slide.
 fn fitted(s: &Session, bytes: &[u8]) -> (f64, f64) {
     let (w, h) = image::ImageReader::new(std::io::Cursor::new(bytes))
@@ -96,26 +121,46 @@ pub(super) fn picture(s: &mut Session, p: &Value) -> Result<Value> {
         return Err(EngineError::Other(format!("{name}: the picture can't be read")));
     }
     let (w, h) = fitted(s, &bytes);
-    // Into a selected empty picture/content placeholder, if there is one.
+    // Into an empty picture or content placeholder: the selected one, else (as PowerPoint does)
+    // the slide's first empty one, so a picture pasted on a fresh «Title and Content» slide
+    // lands in its content area. A placeholder that already holds a picture, table or chart is
+    // not empty: without that check the second picture pasted replaced the first, which was
+    // still selected.
+    let explicit = rect_param(p, "rect");
     let target_ph = s.active().and_then(|d| {
-        d.selected_shapes()
-            .into_iter()
-            .find(|x| {
-                x.ph_type()
+        let empty = |x: &&Shape| {
+            matches!(x.kind, ShapeKind::Shape)
+                && x.text.as_ref().is_none_or(|t| t.is_empty())
+                && x.ph_type()
                     .is_some_and(|k| matches!(k, deckcraft_model::PhType::Picture | deckcraft_model::PhType::Obj | deckcraft_model::PhType::Body))
-                    && x.text.as_ref().is_none_or(|t| t.is_empty())
-            })
-            .map(|x| (x.id, xfrm_of(&d.doc, &d.selection, x)))
+        };
+        let selected = d.selected_shapes().into_iter().find(empty);
+        // Unselected, only where a picture is what the placeholder asks for: body text is not.
+        let waiting = || {
+            if explicit.is_some() || d.selection.target != crate::Target::Slides {
+                return None;
+            }
+            d.shapes()
+                .iter()
+                .filter(empty)
+                .find(|x| x.ph_type().is_some_and(|k| matches!(k, deckcraft_model::PhType::Picture | deckcraft_model::PhType::Obj)))
+        };
+        selected.or_else(waiting).map(|x| (x.id, x.ph_type(), xfrm_of(&d.doc, &d.selection, x)))
     });
-    let rect = rect_param(p, "rect").unwrap_or_else(|| match target_ph {
-        Some((_, b)) => {
-            // Fill the placeholder, cropping the picture to its aspect.
-            b
+    // A picture placeholder is filled, cropping the picture to its aspect; a content placeholder
+    // keeps the whole picture, fitted inside it and centred.
+    let fills = target_ph.is_some_and(|(_, kind, _)| kind == Some(deckcraft_model::PhType::Picture));
+    let rect = explicit.unwrap_or_else(|| match target_ph {
+        Some((_, _, b)) if fills => b,
+        Some((_, _, b)) => {
+            let k = (b.w / w.max(1e-9)).min(b.h / h.max(1e-9)).min(1.0);
+            let (fw, fh) = (w * k, h * k);
+            Xfrm { x: b.x + (b.w - fw) / 2.0, y: b.y + (b.h - fh) / 2.0, w: fw, h: fh, ..b }
         }
-        None => default_rect(s, w, h),
+        None => cascaded(s, default_rect(s, w, h)),
     });
-    let crop = match (target_ph, rect_param(p, "rect")) {
-        (Some(_), None) => {
+    let crop = match (target_ph, explicit) {
+        (Some(_), None) if fills => {
             let (ia, ba) = (w / h.max(1e-9), rect.w / rect.h.max(1e-9));
             if ia > ba {
                 let c = (1.0 - ba / ia) / 2.0;
@@ -127,6 +172,7 @@ pub(super) fn picture(s: &mut Session, p: &Value) -> Result<Value> {
         }
         _ => [0.0; 4],
     };
+    let target_ph = target_ph.map(|(id, _, b)| (id, b));
     let media = s.edit(|doc, _| doc.add_media(&name, ct, bytes).ok_or_else(|| bad("insert.picture", NO_ID_SPACE)))?;
     let shape = Shape {
         xfrm: Some(rect),

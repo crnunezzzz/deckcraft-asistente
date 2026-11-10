@@ -366,6 +366,19 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
             }
             index += 1;
         }
+        // IA fork: File › Actualizar, from this build's own releases (`host_toolbar`).
+        let spanish = crate::lang::current() == crate::lang::Language::Es;
+        if crate::host_toolbar::backstage_update(
+            ui,
+            &mut app.services.host_toolbar,
+            spanish,
+            vec2(NAV_W, ITEM_H),
+            (26.0, 44.0),
+            theme::font(13.0),
+            t.text,
+        ) {
+            out.close = true;
+        }
         let first_bottom = index;
         ui.with_layout(egui::Layout::bottom_up(egui::Align::Min), |ui| {
             ui.add_space(8.0);
@@ -479,14 +492,14 @@ fn dim(ui: &mut Ui, text: &str) {
 /// A link with an arrow (More themes →): true when clicked.
 fn arrow_link(ui: &mut Ui, text: &str) -> bool {
     let t = Tokens::get(ui.ctx());
-    ui.add(egui::Label::new(RichText::new(format!("{text}  →")).font(theme::font(12.5)).color(t.accent)).sense(Sense::click()))
+    ui.add(egui::Label::new(RichText::new(format!("{}  →", crate::lang::tr(text))).font(theme::font(12.5)).color(t.accent)).sense(Sense::click()))
         .on_hover_cursor(egui::CursorIcon::PointingHand)
         .clicked()
 }
 
 /// A search box; true when its text changed.
 fn search(ui: &mut Ui, query: &mut String, hint: &str, width: f32) -> bool {
-    ui.add(egui::TextEdit::singleline(query).hint_text(hint).desired_width(width)).changed()
+    ui.add(egui::TextEdit::singleline(query).hint_text(crate::lang::tr(hint)).desired_width(width)).changed()
 }
 
 /// Draw a labelled icon button and return whether it was clicked while enabled.
@@ -506,7 +519,7 @@ fn bullets(ui: &mut Ui, items: &[&str]) {
     for b in items {
         ui.horizontal(|ui| {
             ui.add_space(6.0);
-            ui.label(RichText::new(format!("•  {b}")).font(theme::font(12.5)));
+            ui.label(RichText::new(format!("•  {}", crate::lang::tr(b))).font(theme::font(12.5)));
         });
     }
     ui.add_space(10.0);

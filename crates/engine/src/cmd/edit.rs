@@ -387,14 +387,36 @@ fn paste(s: &mut Session, p: &Value) -> Result<Value> {
     ok()
 }
 
+/// The one selected shape when it can take pasted text and has none: an empty placeholder
+/// («Click to add text») or an empty text box. Pasted text goes into it, as in PowerPoint,
+/// instead of into a new text box on top of it.
+fn empty_text_target(s: &Session) -> Option<ShapeId> {
+    let st = s.active()?;
+    if st.selection.text.is_some() || st.selection.shapes.len() != 1 {
+        return None;
+    }
+    let shape = st.selected_shapes().into_iter().next()?;
+    let takes_text = matches!(shape.kind, deckcraft_model::ShapeKind::Shape) && (shape.ph.is_some() || shape.text.is_some());
+    (takes_text && shape.text.as_ref().is_none_or(|t| t.is_empty())).then_some(shape.id)
+}
+
+/// Where a text box for pasted text goes: the middle of the slide, stepped down and right while
+/// another shape starts at the same corner, so text pasted twice shows as two boxes.
+fn pasted_text_rect(s: &Session) -> Result<[f64; 4]> {
+    let size = s.doc()?.doc.slide_size;
+    let rect = super::insert::cascaded(s, deckcraft_geom::Xfrm::new(size.width * 0.25, size.height * 0.4, size.width * 0.5, 40.0));
+    Ok([rect.x, rect.y, rect.w, rect.h])
+}
+
 fn paste_external_body(s: &mut Session, body: &TextBody) -> Result<Value> {
+    if let Some(id) = empty_text_target(s) {
+        s.execute("text.edit", &json!({"id": id}))?;
+    }
     if s.doc()?.selection.text.is_some() {
         return super::text::paste_body(s, body);
     }
     let plain = body.text();
-    let st = s.doc()?;
-    let size = st.doc.slide_size;
-    let rect = [size.width * 0.25, size.height * 0.4, size.width * 0.5, 40.0];
+    let rect = pasted_text_rect(s)?;
     let made = s.execute("insert.textBox", &json!({"rect": rect, "text": plain}))?;
     let raw = made.get("id").and_then(Value::as_u64).ok_or_else(|| bad("edit.paste", "no text box"))?;
     let id = u32::try_from(raw).map_err(|_| bad("edit.paste", "no text box"))?;
@@ -415,13 +437,14 @@ fn paste_external_body(s: &mut Session, body: &TextBody) -> Result<Value> {
 }
 
 fn paste_plain(s: &mut Session, text: &str) -> Result<Value> {
+    if let Some(id) = empty_text_target(s) {
+        s.execute("text.edit", &json!({"id": id}))?;
+    }
     if s.doc()?.selection.text.is_some() {
         return super::text::insert_text(s, text, None);
     }
     // No text box being edited: a new text box with the text.
-    let st = s.doc()?;
-    let size = st.doc.slide_size;
-    let rect = [size.width * 0.25, size.height * 0.4, size.width * 0.5, 40.0];
+    let rect = pasted_text_rect(s)?;
     s.execute("insert.textBox", &json!({"rect": rect, "text": text}))
 }
 

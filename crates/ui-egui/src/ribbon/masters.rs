@@ -105,7 +105,10 @@ pub(super) fn handout_master(app: &mut SlideApp, ui: &mut Ui) {
         let r = big_button(ui, Icon::Layout, &format!("Slides Per\nPage: {}", app.ui.handout_per_page), true);
         egui::Popup::menu(&r).show(|ui| {
             for n in [1u8, 2, 3, 4, 6, 9] {
-                if ui.selectable_label(app.ui.handout_per_page == n, format!("{n} Slide{}", if n == 1 { "" } else { "s" })).clicked() {
+                if ui
+                    .selectable_label(app.ui.handout_per_page == n, crate::lang::tr(&format!("{n} Slide{}", if n == 1 { "" } else { "s" })))
+                    .clicked()
+                {
                     app.ui.handout_per_page = n;
                 }
             }

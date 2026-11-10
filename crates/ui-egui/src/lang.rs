@@ -7,7 +7,10 @@
 //! The choice lives in `language.json` beside `ui.json` ([`load`], [`save`]); with no saved
 //! choice the system language decides (`LC_ALL`, `LC_MESSAGES`, `LANG`).
 
+#[cfg(test)]
+mod coverage;
 mod es_more;
+mod patterns;
 
 use std::collections::HashMap;
 use std::path::Path;
@@ -174,6 +177,11 @@ pub fn tr(text: &str) -> &str {
     {
         return t;
     }
+    if let Some(t) = patterns::translate(text, map) {
+        return t;
+    }
+    #[cfg(test)]
+    coverage::missed(text);
     text
 }
 
