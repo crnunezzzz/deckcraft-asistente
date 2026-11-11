@@ -24,6 +24,7 @@ use album::{photo_album, photo_album_edit};
 pub use chart::chart_type;
 use chart::{chart, chart_data, chart_options, chart_type_cmd};
 use links::{action_button, hyperlink, shape_action};
+pub(crate) use picture::cascaded;
 pub use picture::content_type;
 pub(crate) use picture::media_bytes;
 use picture::{audio, picture, video};

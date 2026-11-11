@@ -24,7 +24,7 @@ fn tile(ui: &mut Ui, label: &str, theme: Option<&deckcraft_model::Theme>, big: b
     if resp.hovered() {
         p.rect_stroke(thumb, CornerRadius::same(2), Stroke::new(2.0, t.accent), StrokeKind::Outside);
     }
-    let galley = p.layout(label.to_string(), theme::font(12.0), t.text, rect.width() - 8.0);
+    let galley = p.layout(crate::lang::tr(label).to_string(), theme::font(12.0), t.text, rect.width() - 8.0);
     p.galley(pos2(rect.center().x - galley.size().x / 2.0, thumb.bottom() + 8.0), galley, t.text);
     resp
 }
@@ -187,7 +187,7 @@ pub(super) fn place_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, wi
         p.rect_filled(rect, CornerRadius::same(2), t.hover);
     }
     icons::paint(p, Rect::from_center_size(pos2(rect.left() + 22.0, rect.center().y), vec2(24.0, 24.0)), icon, t.text, false);
-    p.text(pos2(rect.left() + 46.0, rect.center().y), Align2::LEFT_CENTER, label, theme::font(13.5), t.text);
+    p.text(pos2(rect.left() + 46.0, rect.center().y), Align2::LEFT_CENTER, crate::lang::tr(label), theme::font(13.5), t.text);
     resp
 }
 
@@ -259,7 +259,7 @@ pub(super) fn home(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage, out: &mu
         });
     }
     ui.add_space(30.0);
-    ui.hyperlink_to("Join the ArtCraft community on Discord", deckcraft_engine::links::DISCORD);
+    ui.hyperlink_to(crate::lang::tr("Join the ArtCraft community on Discord"), deckcraft_engine::links::DISCORD);
 }
 
 /// New: a blank presentation, then every theme and starter template, with a search box.

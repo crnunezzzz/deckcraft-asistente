@@ -282,3 +282,124 @@ fn a_named_run_without_a_marker_still_reflows() {
     let mark = s.active().unwrap().doc.slides[1].raw_ext.clone().unwrap_or_default();
     assert!(mark.starts_with("deckcraft-album:"), "{mark}");
 }
+
+/// The current slide's pictures as (x, y, w, h, crop).
+fn placed(s: &Session) -> Vec<([f64; 4], [f64; 4])> {
+    let index = s.active().map(|d| d.selection.slide).unwrap_or(0);
+    pictures(s, index)
+        .iter()
+        .filter_map(|sh| match (&sh.kind, s.active().map(|d| xfrm_of(&d.doc, &d.selection, sh))) {
+            (ShapeKind::Picture { fill }, Some(x)) => Some(([x.x, x.y, x.w, x.h], fill.crop)),
+            _ => None,
+        })
+        .collect()
+}
+
+/// Pasting the same picture twice on a blank slide left the second exactly over the first, so
+/// the slide looked as if only one had been pasted.
+#[test]
+fn pictures_pasted_one_after_another_cascade() {
+    let mut s = Session::with_new();
+    s.execute("slide.new", &json!({"layout": "blank"})).unwrap();
+    for _ in 0..3 {
+        s.execute("insert.picture", &pic("a.png")).unwrap();
+    }
+    let got = placed(&s);
+    assert_eq!(got.len(), 3);
+    let (a, b, c) = (got[0].0, got[1].0, got[2].0);
+    assert!(b[0] > a[0] && b[1] > a[1], "the second lands down and right of the first: {a:?} {b:?}");
+    assert!(c[0] > b[0] && c[1] > b[1], "and the third of the second: {b:?} {c:?}");
+    assert_eq!((a[2], a[3]), (c[2], c[3]), "all the same size");
+    // One undo takes one picture away.
+    s.execute("edit.undo", &json!({})).unwrap();
+    assert_eq!(placed(&s).len(), 2);
+}
+
+/// On «Title and Content» the picture goes into the empty content placeholder without selecting
+/// it first, whole (no crop) and inside it; the next picture does not replace it.
+#[test]
+fn a_picture_fills_the_empty_content_placeholder_once() {
+    let mut s = Session::with_new();
+    s.execute("slide.new", &json!({"layout": "titleAndContent"})).unwrap();
+    let body = s
+        .active()
+        .and_then(|d| {
+            d.shapes()
+                .iter()
+                .find(|x| x.ph_type().is_some_and(|k| matches!(k, deckcraft_model::PhType::Obj | deckcraft_model::PhType::Body)))
+                .map(|x| (x.id, x.ph_type(), xfrm_of(&d.doc, &d.selection, x)))
+        })
+        .expect("a content placeholder");
+    let shapes_before = s.active().map(|d| d.shapes().len()).unwrap_or(0);
+    s.execute("insert.picture", &pic("a.png")).unwrap();
+    let first = placed(&s);
+    assert_eq!(first.len(), 1);
+    if body.1 == Some(deckcraft_model::PhType::Obj) {
+        // The placeholder became the picture: no shape was added.
+        assert_eq!(s.active().map(|d| d.shapes().len()), Some(shapes_before));
+        let (r, b) = (first[0].0, body.2);
+        assert!(r[0] >= b.x - 0.01 && r[1] >= b.y - 0.01 && r[0] + r[2] <= b.x + b.w + 0.01 && r[1] + r[3] <= b.y + b.h + 0.01, "{r:?} inside {b:?}");
+        assert!((r[2] - r[3]).abs() < 0.01, "the square picture stays square: {r:?}");
+        assert_eq!(first[0].1, [0.0; 4], "nothing is cropped away");
+    }
+    // The picture (still selected) is not an empty placeholder: a second one is added beside it.
+    s.execute("insert.picture", &pic("b.png")).unwrap();
+    let both = placed(&s);
+    assert_eq!(both.len(), 2, "the second picture must not replace the first");
+    assert_eq!(both[0].0, first[0].0, "the first stays where it was");
+}
+
+/// A selected empty placeholder still takes the picture, and a picture placeholder is filled.
+#[test]
+fn a_selected_placeholder_that_holds_a_picture_is_not_replaced() {
+    let mut s = Session::with_new();
+    s.execute("slide.new", &json!({"layout": "pictureWithCaption"})).unwrap();
+    s.execute("insert.picture", &pic("a.png")).unwrap();
+    let first = placed(&s);
+    assert_eq!(first.len(), 1);
+    s.execute("insert.picture", &pic("b.png")).unwrap();
+    assert_eq!(placed(&s).len(), 2);
+}
+
+/// Text pasted from another program with nothing selected makes a text box; pasted again, the
+/// second box does not sit exactly on the first.
+#[test]
+fn text_pasted_twice_makes_two_boxes_that_do_not_cover_each_other() {
+    let mut s = Session::with_new();
+    s.execute("slide.new", &json!({"layout": "blank"})).unwrap();
+    s.execute("edit.select", &json!({"ids": []})).unwrap();
+    s.execute("edit.paste", &json!({"text": "Primera nota"})).unwrap();
+    s.execute("edit.select", &json!({"ids": []})).unwrap();
+    s.execute("edit.paste", &json!({"text": "Segunda nota"})).unwrap();
+    let boxes: Vec<(String, f64, f64)> = s
+        .active()
+        .map(|d| d.shapes().iter().filter(|x| x.text_box).filter_map(|x| Some((x.text.as_ref()?.text(), x.xfrm?.x, x.xfrm?.y))).collect())
+        .unwrap_or_default();
+    assert_eq!(boxes.len(), 2, "{boxes:?}");
+    assert_eq!((boxes[0].0.as_str(), boxes[1].0.as_str()), ("Primera nota", "Segunda nota"));
+    assert!(boxes[1].1 > boxes[0].1 && boxes[1].2 > boxes[0].2, "{boxes:?}");
+}
+
+/// With the empty «Click to add text» placeholder selected, pasted text goes into it.
+#[test]
+fn text_pasted_on_a_selected_empty_placeholder_fills_it() {
+    let mut s = Session::with_new();
+    s.execute("slide.new", &json!({"layout": "titleAndContent"})).unwrap();
+    let (body, count) = s
+        .active()
+        .map(|d| {
+            let body = d
+                .shapes()
+                .iter()
+                .find(|x| x.ph_type().is_some_and(|k| matches!(k, deckcraft_model::PhType::Obj | deckcraft_model::PhType::Body)))
+                .map(|x| x.id);
+            (body, d.shapes().len())
+        })
+        .unwrap();
+    let body = body.expect("a content placeholder");
+    s.execute("edit.select", &json!({"ids": [body.0]})).unwrap();
+    s.execute("edit.paste", &json!({"text": "Texto pegado"})).unwrap();
+    let st = s.active().unwrap();
+    assert_eq!(st.shapes().len(), count, "no text box was added");
+    assert_eq!(st.shape(body).and_then(|x| x.text.as_ref()).map(|t| t.text()).as_deref(), Some("Texto pegado"));
+}

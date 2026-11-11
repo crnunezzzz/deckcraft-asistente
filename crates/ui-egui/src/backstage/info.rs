@@ -98,7 +98,8 @@ pub(super) fn info(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
                     let Some(draft) = bs.props.get_mut(i) else { continue };
                     let l = ui.label(RichText::new(crate::lang::tr(label)).color(t.text_dim));
                     let id = ui.make_persistent_id(("backstage_prop", *key));
-                    let resp = ui.add(egui::TextEdit::singleline(draft).id(id).hint_text(*hint).desired_width(300.0)).labelled_by(l.id);
+                    let resp =
+                        ui.add(egui::TextEdit::singleline(draft).id(id).hint_text(crate::lang::tr(hint)).desired_width(300.0)).labelled_by(l.id);
                     if resp.lost_focus() && *draft != saved {
                         // Commit first: a click on another field takes the focus before this one is drawn.
                         let mut p = serde_json::Map::new();
@@ -225,8 +226,8 @@ pub(super) fn about(app: &mut SlideApp, ui: &mut Ui) {
             if task(ui, Icon::Help, "Credits", "Credits", "The people and models who built DeckCraft.", true) {
                 let _ = app.run("app.about", json!({}));
             }
-            ui.hyperlink_to("Join our community on Discord", deckcraft_engine::links::DISCORD);
-            ui.hyperlink_to("Source on GitHub", deckcraft_engine::links::GITHUB);
+            ui.hyperlink_to(crate::lang::tr("Join our community on Discord"), deckcraft_engine::links::DISCORD);
+            ui.hyperlink_to(crate::lang::tr("Source on GitHub"), deckcraft_engine::links::GITHUB);
         });
         ui.add_space(40.0);
         ui.vertical(|ui| {

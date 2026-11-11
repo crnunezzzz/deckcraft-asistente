@@ -168,7 +168,7 @@ pub(super) fn print(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
             }
             ui.checkbox(&mut bs.print_frame, crate::lang::tr("Frame Slides"));
             ui.add_space(6.0);
-            if ui.link("Edit Header & Footer").clicked() {
+            if ui.link(crate::lang::tr("Edit Header & Footer")).clicked() {
                 let _ = app.run("app.dialog", json!({"id": "headerFooter"}));
             }
         });

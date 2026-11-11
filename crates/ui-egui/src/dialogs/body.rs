@@ -296,7 +296,7 @@ fn dlg_quit(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
         return true;
     }
     let what = if names.len() == 1 { format!("“{}”", names[0]) } else { format!("{} presentations", names.len()) };
-    ui.label(egui::RichText::new(format!("Do you want to save the changes you made to {what}?")).strong());
+    ui.label(egui::RichText::new(crate::lang::tr(&format!("Do you want to save the changes you made to {what}?"))).strong());
     ui.label(crate::lang::tr("Your changes will be lost if you don't save them."));
     ui.add_space(8.0);
     let mut done = false;
@@ -329,7 +329,7 @@ fn dlg_quit(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
 fn dlg_close(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
     // File › Close and Ctrl+W on a presentation with unsaved changes.
     let Some(name) = app.session.active().map(|d| d.title()) else { return true };
-    ui.label(egui::RichText::new(format!("Do you want to save the changes you made to “{name}”?")).strong());
+    ui.label(egui::RichText::new(crate::lang::tr(&format!("Do you want to save the changes you made to “{name}”?"))).strong());
     ui.label(crate::lang::tr("Your changes will be lost if you don't save them."));
     ui.add_space(8.0);
     let mut done = false;
@@ -513,7 +513,7 @@ fn dlg_action(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         }
     });
     ui.separator();
-    ui.label(if tab == "hover" { "Action on mouse over" } else { "Action on click" });
+    ui.label(crate::lang::tr(if tab == "hover" { "Action on mouse over" } else { "Action on click" }));
     let kind = d.get("kind", cur_kind);
     let hyperlink = !matches!(kind.as_str(), "none" | "program" | "playMedia");
     let pick = |d: &mut Dialog, ui: &mut Ui, k: &str, l: &str| {
@@ -649,7 +649,7 @@ fn dlg_reuse_slides(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         })
         .unwrap_or_default();
     let name = std::path::Path::new(&path).file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or(path.clone());
-    ui.label(format!("Insert slides from {name} after the current slide:"));
+    ui.label(crate::lang::tr(&format!("Insert slides from {name} after the current slide:")));
     // Unticked slides are remembered by index; everything starts ticked.
     let off = |d: &Dialog, i: usize| d.fields.get(&format!("off{i}")).is_some_and(|v| v == "1");
     ui.horizontal(|ui| {
@@ -933,12 +933,14 @@ fn dlg_spelling(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     let info = app.session.execute("review.dictionary", &json!({})).unwrap_or_default();
     let available = info.get("available").and_then(Value::as_bool).unwrap_or(false);
     match info.get("found").and_then(Value::as_str) {
-        Some(f) if available => ui.label(egui::RichText::new(format!("Dictionary: {}", f.rsplit(['/', '\\']).next().unwrap_or(f))).small().weak()),
-        _ if available => {
-            ui.label(egui::RichText::new(format!("Dictionary: {}", info.get("lang").and_then(Value::as_str).unwrap_or(""))).small().weak())
+        Some(f) if available => {
+            ui.label(egui::RichText::new(crate::lang::tr(&format!("Dictionary: {}", f.rsplit(['/', '\\']).next().unwrap_or(f)))).small().weak())
         }
+        _ if available => ui.label(
+            egui::RichText::new(crate::lang::tr(&format!("Dictionary: {}", info.get("lang").and_then(Value::as_str).unwrap_or("")))).small().weak(),
+        ),
         _ => ui.label(
-            egui::RichText::new(format!(
+            egui::RichText::new(crate::lang::tr(&format!(
                 "No {} dictionary is installed, so only common misspellings are found. Put a Hunspell .aff/.dic pair in {}.",
                 info.get("lang").and_then(Value::as_str).unwrap_or("en-US"),
                 info.get("folders")
@@ -946,7 +948,7 @@ fn dlg_spelling(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     .and_then(|a| a.get(1).or(a.first()))
                     .and_then(Value::as_str)
                     .unwrap_or("a dictionaries folder")
-            ))
+            )))
             .small()
             .weak(),
         ),
@@ -1076,12 +1078,12 @@ fn dlg_accessibility(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
     egui::ScrollArea::vertical().max_height(300.0).show(ui, |ui| {
         for item in &list {
             ui.horizontal(|ui| {
-                ui.label(format!(
+                ui.label(crate::lang::tr(&format!(
                     "Slide {}: {}{}",
                     item.get("slide").and_then(Value::as_u64).unwrap_or(0) + 1,
                     item.get("issue").and_then(Value::as_str).unwrap_or(""),
                     item.get("name").and_then(Value::as_str).map(|n| format!(" — {n}")).unwrap_or_default()
-                ));
+                )));
                 if ui.small_button(crate::lang::tr("Go to")).clicked() {
                     let _ = app.run("slide.go", json!({"index": item.get("slide").cloned().unwrap_or_default()}));
                     if let Some(id) = item.get("shape") {
@@ -1114,7 +1116,7 @@ fn dlg_language(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             all = true;
         }
     });
-    ui.label(if all { "Mark all text in the presentation as:" } else { "Mark selected text as:" });
+    ui.label(crate::lang::tr(if all { "Mark all text in the presentation as:" } else { "Mark selected text as:" }));
     egui::ScrollArea::vertical().max_height(220.0).show(ui, |ui| {
         // The selection's own language first when the list doesn't have it.
         let own = (!crate::squiggles::LANGS.iter().any(|(_, t)| t.eq_ignore_ascii_case(&cur))).then(|| (cur.clone(), cur.clone()));
