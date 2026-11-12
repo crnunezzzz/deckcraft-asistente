@@ -1068,7 +1068,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-android"
-version = "0.18.0"
+version = "0.18.1"
 dependencies = [
  "android-activity",
  "cpal",
@@ -1099,7 +1099,7 @@ dependencies = [
 
 [[package]]
 name = "deckcraft-assistant"
-version = "0.18.0"
+version = "0.18.1"
 dependencies = [
  "arboard",
  "craft-ui",
