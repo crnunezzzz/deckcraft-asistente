@@ -51,7 +51,13 @@ after_merge() {
     fi
 
     # The lock file follows the merged manifests (new crates of ours, versions of theirs).
-    cargo metadata --format-version 1 > /dev/null
+    # A manifest of ours that no longer loads (the original dropped a workspace dependency we
+    # inherit, as quick-xml and zip in WordCraft 0.19) is not fatal here: the merge stays committed
+    # and the workflow's «Try the merged code» reports it as broken, so Claude fixes our crate.
+    # Exiting here would skip that step, and the sync would stop with nobody to fix it.
+    if ! cargo metadata --format-version 1 > /dev/null; then
+        echo "::warning::Our manifests do not load against the merged code: left to «Try the merged code»."
+    fi
     git add -A Cargo.lock "$manifest" 2> /dev/null || true
     if ! git diff --cached --quiet; then
         git commit -m "IA sync: lock file and assistant dependencies follow the merged manifests"
