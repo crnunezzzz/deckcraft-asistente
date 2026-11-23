@@ -292,6 +292,14 @@ jobs:
             echo "::warning title=Falta una plataforma::La versión más reciente no trae: $missing. Revisa su compilación en este workflow (y, para Android, los secretos de firma)."
             { echo "## Falta una plataforma"; echo; echo "La versión más reciente no trae: $missing."; } >> "$GITHUB_STEP_SUMMARY"
           fi
+          # Nothing new upstream is not a stop: the original can go days without a release. Old is
+          # only a problem while main has not merged the original's newest commit.
+          head=$(gh api "repos/$UPSTREAM/commits/$UPSTREAM_BRANCH" --jq .sha 2> /dev/null || true)
+          merged=$(gh api -H "Accept: application/vnd.github.raw" "repos/$GH_REPO/contents/.github/ia/upstream.rev?ref=main" 2> /dev/null | tr -d '[:space:]' || true)
+          if [ -n "$head" ] && [ "$head" = "$merged" ]; then
+            echo "main ya contiene lo último de $UPSTREAM ($head): no hay nada nuevo que publicar."
+            exit 0
+          fi
           if [ "$age" -gt 3 ]; then
             msg="No se publica una versión de $APP_TITLE IA desde hace $age días ($newest), aunque $UPSTREAM sigue avanzando: la sincronización o la compilación está detenida. Revisa las últimas ejecuciones de este workflow."
             { echo "## Las actualizaciones se detuvieron"; echo; echo "$msg"; } >> "$GITHUB_STEP_SUMMARY"
