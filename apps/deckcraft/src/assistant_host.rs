@@ -49,7 +49,7 @@ thread_local! {
 fn with(f: impl FnOnce(&mut AssistantHost)) {
     HOST.with(|cell| {
         if let Ok(mut host) = cell.try_borrow_mut() {
-            f(host.get_or_insert_with(|| AssistantHost::new(super::config_dir())));
+            f(host.get_or_insert_with(|| AssistantHost::new(crate::app_dirs::config_dir())));
         }
     });
 }
